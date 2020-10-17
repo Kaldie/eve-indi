@@ -24,10 +24,10 @@ public class KillboardServiceImp {
 	public void addMaterials(TypeId typeId, long quentity, Date date) {
         List<RequiredMaterialsEntity> materials = requiredMaterialsRepository.getRequiredMaterials(typeId.getId());
         materials.stream().forEach(material -> {
-            DestroyedContent content = new DestroyedContent(material.getRequiredMaterial(), date, material.getQuantity() * quentity);
+            DestroyedContent content = new DestroyedContent(
+                material.getRequiredMaterial(), 
+                date, material.getQuantity() * quentity);
 
-            // content.setTypeId( material );
-            // content.setQuentity( material.getQuantity() * quentity );
             destroyedItemsRepository.save(content);
         });
 	}
