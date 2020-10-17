@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+    mssql:
+        image: mcr.microsoft.com/mssql/server:2017-CU8-ubuntu
+        environment:
+            'ACCEPT_EULA':  'y'
+            'SA_PASSWORD': 'magic11!'
+        ports: 
+            - 1433:1433
