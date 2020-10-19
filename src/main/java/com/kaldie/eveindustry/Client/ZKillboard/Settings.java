@@ -1,8 +1,8 @@
-package com.kaldie.eveindustry.Publisher.Killboard;
+package com.kaldie.eveindustry.Client.ZKillboard;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class Settings {
     public String action = "sub";
     public String channel = "killstream";   

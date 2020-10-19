@@ -1,19 +1,18 @@
-package com.kaldie.eveindustry.Publisher.Killboard;
+package com.kaldie.eveindustry.Client.ZKillboard;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kaldie.eveindustry.Events.Killboard.KillEvent;
-import com.kaldie.eveindustry.Repository.Zkillboard.Message;
-
-import java.net.URISyntaxException;
+import com.kaldie.eveindustry.Publisher.Killboard.KillboardWebSocketPublisher;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,8 +20,10 @@ public class KillboardWebSocketClient extends WebSocketClient {
 
 	private static String url = "wss://zkillboard.com/websocket/";
 
+	private Logger logger = LoggerFactory.getLogger(KillboardWebSocketClient.class);
+
 	@Autowired
-	private ApplicationEventPublisher publisher;
+	KillboardWebSocketPublisher publisher;
 
 	public KillboardWebSocketClient() throws URISyntaxException {
 		super(new URI(KillboardWebSocketClient.url));
@@ -45,13 +46,8 @@ public class KillboardWebSocketClient extends WebSocketClient {
 
 	@Override
 	public void onMessage(String message) {
-		try {
-			Message serializedMessage = new ObjectMapper().readValue(message, Message.class);
-			publisher.publishEvent(new KillEvent(this, serializedMessage));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		logger.info("New message recieved");
+		publisher.publish(message);
 	}
 
 	@Override
