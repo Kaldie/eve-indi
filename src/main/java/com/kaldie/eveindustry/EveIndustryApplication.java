@@ -7,12 +7,11 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.event.EventListener;
 
-import java.util.List;
+import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kaldie.eveindustry.Publisher.Killboard.KillboardWebSocketClient;
-import com.kaldie.eveindustry.Repository.RequiredMaterials.RequiredMaterialsEntity;
-import com.kaldie.eveindustry.Repository.RequiredMaterials.RequiredMaterialsRepository;
+import com.kaldie.eveindustry.Repository.ESDReader;
 
 @SpringBootApplication
 @EnableCaching
@@ -22,10 +21,19 @@ public class EveIndustryApplication {
 	private KillboardWebSocketClient killboardWebSocketClient;
 
 	@Autowired
-	private RequiredMaterialsRepository requiredMaterialsRepository;
+	ESDReader reader;
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void doSomethingAfterStartup() {
+
+
+		// try {
+			// reader.storeEsd();
+		// } catch (IOException e) {
+		// 	e.printStackTrace();
+		// }
+
+
 		try {
 			killboardWebSocketClient.startListnening();
 		} catch (JsonProcessingException | InterruptedException e) {

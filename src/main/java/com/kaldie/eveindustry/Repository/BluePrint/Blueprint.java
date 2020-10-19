@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.kaldie.eveindustry.Repository.TypeID.TypeId;
 
 import lombok.Data;
 
@@ -21,14 +22,14 @@ public class Blueprint {
     
     private int productionLimit;
 
-    public Long getProducedID() {
+    public TypeId getProducedID() {
         Activity manufacturing = activities.getManufacturing();
         // check if the blueprint has any manufactering
-        if (manufacturing == null) return -1L;
+        if (manufacturing == null) return null;
 
         // check if there is only one outcome
-        Material product = manufacturing.getProducts().get(1);
+        Material product = manufacturing.getProducts().get(0);
 
-        return product != null ? product.getTypeID() : 0;
+        return product != null ? product.getTypeID() : null;
     }
 }

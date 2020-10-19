@@ -2,21 +2,28 @@ package com.kaldie.eveindustry.Repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
 import com.kaldie.eveindustry.Repository.BluePrint.Blueprint;
 import com.kaldie.eveindustry.Repository.BluePrint.BlueprintRepository;
 import com.kaldie.eveindustry.Repository.TypeID.TypeIDRepository;
 import com.kaldie.eveindustry.Repository.TypeID.TypeId;
 import com.kaldie.eveindustry.Repository.TypeID.TypeMaterials.TypeMaterial;
+import com.kaldie.eveindustry.Repository.Universe.Region;
+import com.kaldie.eveindustry.Repository.Universe.RegionRepository;
+import com.kaldie.eveindustry.Repository.Universe.RegionVisitor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import lombok.Data;
@@ -29,12 +36,18 @@ public class ESDReader {
     private Collection<TypeId> types;
     private Collection<Blueprint> blueprints;
     private Collection<TypeMaterial> typeMaterials;
+    private List<Region> regions;
+
+    private Logger logger = LoggerFactory.getLogger(ESDReader.class);
     
     @Autowired
     private BlueprintRepository blueprintRepository;
     
     @Autowired
     private TypeIDRepository typeRepository;
+
+    @Autowired
+    private RegionRepository regionRepository;
 
     public void loadEsd() {
         try {
@@ -44,13 +57,19 @@ public class ESDReader {
         }
 
         try {
-            this.load_blueprints();
+            this.loadBlueprints();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            load_typeMaterials();
+            loadTypeMaterials();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            loadRegions();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,49 +77,52 @@ public class ESDReader {
 
     private void storeBlueprints() throws IOException {
         if (blueprints == null) {
-            this.load_blueprints();
+            logger.info("loading blueprint from yml files.");
+            this.loadBlueprints();
         }
-        blueprintRepository.saveAll(blueprints);
+        logger.info("Save Blueprints to db.");
+        for (Blueprint blueprint : blueprints) {
+            try {
+                blueprintRepository.save(blueprint);
+            } catch (DataIntegrityViolationException e) {
+                logger.error("Could not insert blue print!");
+                logger.info("Blueprint id: {}", blueprint.getBlueprintTypeID());
+                logger.info("Produced: {}", blueprint.getProducedID());
+                logger.info("Required for manufacturing: {}", blueprint.getActivities().getManufacturing().getRequiredMaterials().toArray());
+            }
+        }
     }
 
     private void storeTypeIds() throws IOException {
         if (types == null) {
+            logger.info("loading types from yml files.");
             this.loadTypeIds();
         }
+        logger.info("Saving types in db.");
         typeRepository.saveAll(types);
     }
 
-    public void storeEsd() throws IOException {
-        storeTypeIds();
-        storeBlueprints();
+    private void storeRegions() throws IOException {
+        if (regions == null) {
+            logger.info("loading regions from yml files.");
+            this.loadRegions();
+        }
+        logger.info("Save regions to db.");
+        regionRepository.saveAll(regions);
     }
 
-    // public List<Material> getRequiredMaterials(Long id) throws IOException {
-    //     // if (blueprints == null) {
-    //     //     this.load_blueprints();
-    //     // }
-
-    //     // List<Entry<Long, Blueprint>> bluePrints = blueprints.filter(item -> item.getValue().getProducedID().equals(id)).collect(Collectors.toList());
-
-    //     // if (bluePrints.size() != 1) {
-    //     //     throw new IOException("booboo");
-    //     // }
-
-    //     // return bluePrints.get(0).getValue().getActivities().getManufacturing().getMaterials();
-
-    // }
-
-    public String getName(Long id) throws IOException {
-        if (types == null) {
-            this.loadTypeIds();
-        }
-        Optional<TypeId> foundType = types.stream().filter(type -> type.getId().equals(id)).findFirst();
-        return foundType.isPresent() ? foundType.get().toString() : "unkown";
+    public void storeEsd() throws IOException {
+        logger.info("Storing Type IDs");
+        storeTypeIds();
+        logger.info("Storing Blueprints");
+        storeBlueprints();
+        logger.info("Storing Regions");
+        storeRegions();
     }
 
     private void loadTypeIds() throws IOException {
         final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        Map<Long, TypeId> typeMap = mapper.readValue(new File("resources/typeIDs.yaml"),
+        Map<Long, TypeId> typeMap = mapper.readValue(new File("resources/sde/fsd/typeIDs.yaml"),
             new TypeReference<Map<Long, TypeId>>() { });
         
         // Add the id to the entry
@@ -110,9 +132,9 @@ public class ESDReader {
         types = typeMap.values();
     }
 
-    private void load_blueprints() throws IOException {
+    private void loadBlueprints() throws IOException {
         final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        Map<Long, Blueprint> blueprintMap = mapper.readValue(new File("resources/blueprints.yaml"),
+        Map<Long, Blueprint> blueprintMap = mapper.readValue(new File("resources/sde/fsd/blueprints.yaml"),
             new TypeReference<Map<Long, Blueprint>>() { });
 
         for (Map.Entry<Long, Blueprint> entry : blueprintMap.entrySet()) {
@@ -121,11 +143,17 @@ public class ESDReader {
         blueprints = blueprintMap.values();
     }
 
-    private void load_typeMaterials() throws IOException {
+    private void loadTypeMaterials() throws IOException {
         final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        Map<Long, TypeMaterial> typeMaterialMap = mapper.readValue(new File("resources/typeMaterials.yaml"),
+        Map<Long, TypeMaterial> typeMaterialMap = mapper.readValue(new File("resources/sde/fsd/typeMaterials.yaml"),
             new TypeReference<Map<Long, TypeMaterial>>() { });
         typeMaterials = typeMaterialMap.values();
+    }
+
+    private void loadRegions() throws IOException {
+        RegionVisitor regionVisitor = new RegionVisitor();
+        Files.walkFileTree(Paths.get("resources/sde/fsd/universe"), regionVisitor);
+        regions = regionVisitor.getRegions();
     }
     
 }

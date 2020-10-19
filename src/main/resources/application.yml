@@ -9,7 +9,7 @@ spring:
         hibernate:
             format_sql: false
             dialect: org.hibernate.dialect.SQLServer2012Dialect
-            ddl-auto: update
+            ddl-auto: validate
     flyway:
         url: jdbc:sqlserver://localhost;database=master
         schemas: dbo

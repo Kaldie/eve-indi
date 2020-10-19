@@ -7,12 +7,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kaldie.eveindustry.Repository.TypeID.TypeId;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
@@ -25,6 +25,7 @@ public class DestroyedContent {
     
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "typeId")
     private TypeId typeId;
     
     private Date date;
@@ -34,7 +35,6 @@ public class DestroyedContent {
         this.typeId = type;
         this.date = date;
         this.quentity = quantity;
-
     }
     
 }
