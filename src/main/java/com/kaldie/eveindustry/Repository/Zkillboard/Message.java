@@ -35,7 +35,7 @@ public class Message implements Serializable {
     private long killmailId;
     
     @JsonProperty("killmail_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ssX")
     private Date  killmailTime;
     
     @JsonProperty("solar_system_id")
