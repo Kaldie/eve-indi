@@ -23,7 +23,6 @@ public class DestroyedContent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "typeId")
     private TypeId typeId;
