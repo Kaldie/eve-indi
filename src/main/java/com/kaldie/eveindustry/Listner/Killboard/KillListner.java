@@ -1,12 +1,8 @@
 package com.kaldie.eveindustry.Listner.Killboard;
 
 import java.util.Date;
-import java.util.List;
 
 import com.kaldie.eveindustry.Events.Killboard.KillEvent;
-import com.kaldie.eveindustry.Repository.RequiredMaterials.RequiredMaterialsEntity;
-import com.kaldie.eveindustry.Repository.RequiredMaterials.RequiredMaterialsRepository;
-import com.kaldie.eveindustry.Repository.RequiredMaterials.RequiredMiniralsRepository;
 import com.kaldie.eveindustry.Repository.TypeID.TypeId;
 import com.kaldie.eveindustry.Repository.Zkillboard.Message;
 import com.kaldie.eveindustry.Repository.Zkillboard.MessageRepository;
@@ -37,12 +33,12 @@ public class KillListner implements ApplicationListener<KillEvent> {
         .forEach(item -> {
             TypeId id = item.getItemId();
             long quentity = item.getDestroyed();
-            service.addMaterials(id, quentity, date);
+            service.addDestroyedMaterials(id, quentity, date);
         });
 
         // list the ship that was destroyed
         if (message.getVictim().getShip_type_id() != null) {
-            service.addMaterials(message.getVictim().getShip_type_id(),1, date);
+            service.addDestroyedMaterials(message.getVictim().getShip_type_id(),1, date);
         }
     }
     
