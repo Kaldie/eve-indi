@@ -1,4 +1,4 @@
-package com.kaldie.eveindustry.repository.bluePrint;
+package com.kaldie.eveindustry.repository.blueprint;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

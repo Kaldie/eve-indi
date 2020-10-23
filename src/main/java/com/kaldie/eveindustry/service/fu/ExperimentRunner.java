@@ -37,7 +37,7 @@ public class ExperimentRunner implements ApplicationContextAware {
     public void runAll() {
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
 
-        scanner.addIncludeFilter(new AnnotationTypeFilter(com.kaldie.eveindustry.annotations.Experiment));
+        scanner.addIncludeFilter(new AnnotationTypeFilter(com.kaldie.eveindustry.eve_indi_annotations.Experiment));
 
         for (BeanDefinition beanDefinition : scanner.findCandidateComponents("com.kaldie.eveindustry")) {
             System.out.println(beanDefinition.getBeanClassName());

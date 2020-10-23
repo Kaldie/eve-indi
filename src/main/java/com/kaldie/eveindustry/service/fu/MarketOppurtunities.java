@@ -9,7 +9,7 @@ import java.util.function.DoubleBinaryOperator;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.kaldie.eveindustry.Client.ESI.MarketOrders;
+import com.kaldie.eveindustry.client.esi.MarketOrders;
 import com.kaldie.eveindustry.repository.type_id.TypeIDRepository;
 import com.kaldie.eveindustry.repository.type_id.TypeId;
 import com.kaldie.eveindustry.repository.universe.Region;
@@ -26,7 +26,7 @@ import net.troja.eve.esi.ApiException;
 import net.troja.eve.esi.model.MarketOrdersResponse;
 
 @Component
-@com.kaldie.eveindustry.annotations.Experiment
+@com.kaldie.eveindustry.eve_indi_annotations.Experiment
 @RequiredArgsConstructor
 public class MarketOppurtunities extends Tasklala {
 

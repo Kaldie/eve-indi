@@ -1,4 +1,4 @@
-package com.kaldie.eveindustry.repository.bluePrint;
+package com.kaldie.eveindustry.repository.blueprint;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

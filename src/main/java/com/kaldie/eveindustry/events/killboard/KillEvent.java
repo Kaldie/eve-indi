@@ -1,4 +1,4 @@
-package com.kaldie.eveindustry.events.Killboard;
+package com.kaldie.eveindustry.events.killboard;
 
 import com.kaldie.eveindustry.repository.zkillboard.Message;
 

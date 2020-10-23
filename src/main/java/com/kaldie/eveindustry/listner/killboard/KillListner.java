@@ -1,8 +1,8 @@
-package com.kaldie.eveindustry.listner.Killboard;
+package com.kaldie.eveindustry.listner.killboard;
 
 import java.util.Date;
 
-import com.kaldie.eveindustry.events.Killboard.KillEvent;
+import com.kaldie.eveindustry.events.killboard.KillEvent;
 import com.kaldie.eveindustry.repository.type_id.TypeId;
 import com.kaldie.eveindustry.repository.zkillboard.Message;
 import com.kaldie.eveindustry.repository.zkillboard.MessageRepository;

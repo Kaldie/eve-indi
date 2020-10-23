@@ -1,4 +1,4 @@
-package com.kaldie.eveindustry.Client.ESI;
+package com.kaldie.eveindustry.client.esi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class MarketOrders {
         }
         while (currentPage < pages);
         
-        logger.info("Found {} orders", orders.size());
+        logger.info("Found 123{} orders", orders.size());
         return orders;
     }
 

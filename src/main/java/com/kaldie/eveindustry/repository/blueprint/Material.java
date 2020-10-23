@@ -1,4 +1,4 @@
-package com.kaldie.eveindustry.repository.bluePrint;
+package com.kaldie.eveindustry.repository.blueprint;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
