@@ -53,7 +53,11 @@ public class MarketOrders {
 
     public static List<MarketOrdersResponse> getRegionalItemOrders(long regionalId ) throws ApiException {
         MarketApi api = new MarketApi();
-        List<MarketOrdersResponse> orders = new ArrayList<MarketOrdersResponse>(){};
+
+        List<MarketOrdersResponse> orders = new ArrayList<MarketOrdersResponse>(){
+            private static final long serialVersionUID = 1L;
+        };
+
         int currentPage = 1;
         int pages;
         ApiResponse<List<MarketOrdersResponse>> response;

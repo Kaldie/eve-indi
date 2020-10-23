@@ -3,7 +3,7 @@ package com.kaldie.eveindustry;
 import com.kaldie.eveindustry.client.zkillboard.KillboardWebSocketClient;
 import com.kaldie.eveindustry.repository.ESDReader;
 import com.kaldie.eveindustry.repository.universe.RegionRepository;
-import com.kaldie.eveindustry.service.fu.MarketOppurtunities;
+import com.kaldie.eveindustry.service.experiments.MarketOppurtunities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +27,8 @@ public class EveIndustryApplication {
 	@Autowired
 	private RegionRepository regionRepository;
 
-	@Autowired
-	private MarketOppurtunities opp;
+	// @Autowired
+	// private MarketOppurtunities opp;
 
 	// @Autowired
 	// ExperimentRunner runner;

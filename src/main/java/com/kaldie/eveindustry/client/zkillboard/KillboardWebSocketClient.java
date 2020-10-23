@@ -15,8 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
 @Component
@@ -24,8 +22,8 @@ public class KillboardWebSocketClient extends WebSocketClient {
 
 	@Value
 	public class Settings {
-		public String action = "sub";
-		public String channel = "killstream";   
+		private String action = "sub";
+		private String channel = "killstream";   
 	}
 	
 	private static String url = "wss://zkillboard.com/websocket/";
@@ -50,12 +48,12 @@ public class KillboardWebSocketClient extends WebSocketClient {
 
 	@Override
 	public void onOpen(ServerHandshake handshakedata) {
-		System.out.println("new connection opened");
+		logger.info("new connection opened");
 	}
 
 	@Override
 	public void onClose(int code, String reason, boolean remote) {
-		System.out.println("closed with exit code " + code + " additional info: " + reason);
+		logger.info("closed with exit code {} additional info: {}" ,code, reason);
 	}
 
 	@Override
@@ -66,17 +64,17 @@ public class KillboardWebSocketClient extends WebSocketClient {
 
 	@Override
 	public void onMessage(ByteBuffer message) {
-		System.out.println("received ByteBuffer");
+		logger.info("received ByteBuffer");
 	}
 
 	@Override
 	public void onError(Exception ex) {
-		System.err.println("an error occurred:" + ex);
+		logger.error("an error occurred:", ex);
 		this.reconnect();
 		try {
 			this.sendSettings();
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 	}
