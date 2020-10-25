@@ -1,0 +1,17 @@
+spring:
+    datasource:
+        driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+        url: jdbc:sqlserver://localhost:1434;database=master
+        username: sa
+        password: magic11!
+    jpa:
+        show-sql: false
+        hibernate:
+            format_sql: false
+
+    flyway:
+        url: jdbc:sqlserver://localhost:1434;database=master
+        schemas: dbo
+        user: sa
+        password: magic11!
+        baseline-on-migrate: true

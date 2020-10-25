@@ -1,9 +1,8 @@
-package com.kaldie.eveindustry.Service.Killboard;
+package com.kaldie.eveindustry.service.killboard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,8 +12,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaldie.eveindustry.repository.type_id.TypeId;
 import com.kaldie.eveindustry.repository.zkillboard.Message;
 
-import org.junit.jupiter.api.Test;
 import org.apache.commons.io.IOUtils;
+import org.junit.jupiter.api.Test;
 
 public class MessageTest {
 

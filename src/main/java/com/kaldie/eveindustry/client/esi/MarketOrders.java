@@ -2,8 +2,6 @@ package com.kaldie.eveindustry.client.esi;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 import java.util.function.Predicate;
 
 import org.slf4j.Logger;
@@ -31,7 +29,8 @@ public class MarketOrders {
 
     public static List<MarketOrdersResponse> getRegionalItemOrders(long typeId, long regionalId ) throws ApiException {
         MarketApi api = new MarketApi();
-        List<MarketOrdersResponse> orders = new ArrayList<MarketOrdersResponse>(){};
+        List<MarketOrdersResponse> orders = new ArrayList<MarketOrdersResponse>(){
+			private static final long serialVersionUID = -6262036476817492616L;};
         int currentPage = 1;
         int pages;
         ApiResponse<List<MarketOrdersResponse>> response;
@@ -84,16 +83,16 @@ public class MarketOrders {
         Pair<Double,Double> xx = orders.stream().parallel()
             .filter(isBuyOrder.negate())
             .reduce(Pair.of(Double.MIN_VALUE, Double.MAX_VALUE), 
-                (pair,order) -> { 
-                return Pair.of(
+                (pair,order) -> 
+                Pair.of(
                     pair.getFirst() < order.getPrice() ? order.getPrice() : pair.getFirst(),
-                    pair.getSecond() > order.getPrice() ? order.getPrice() : pair.getSecond());
-                },
-                (pair1, pair2) -> {
-                    return Pair.of(
+                    pair.getSecond() > order.getPrice() ? order.getPrice() : pair.getSecond())
+                ,
+                (pair1, pair2) ->
+                    Pair.of(
                         pair1.getFirst() < pair2.getFirst() ? pair2.getFirst() : pair1.getFirst(),
-                        pair1.getSecond() > pair2.getSecond() ? pair2.getSecond() : pair1.getSecond());
-                });
+                        pair1.getSecond() > pair2.getSecond() ? pair2.getSecond() : pair1.getSecond())
+                );
         logger.info("min: {}, max: {}",xx.getFirst(), xx.getSecond());
     }
     

@@ -1,4 +1,4 @@
-package com.kaldie.eveindustry.service.fu;
+package com.kaldie.eveindustry.service.experiments.market;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,11 +14,11 @@ import com.kaldie.eveindustry.repository.type_id.TypeIDRepository;
 import com.kaldie.eveindustry.repository.type_id.TypeId;
 import com.kaldie.eveindustry.repository.universe.Region;
 import com.kaldie.eveindustry.repository.universe.RegionRepository;
+import com.kaldie.eveindustry.service.experiments.Task;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import net.troja.eve.esi.model.MarketOrdersResponse;
 @Component
 @com.kaldie.eveindustry.eve_indi_annotations.Experiment
 @RequiredArgsConstructor
-public class MarketOppurtunities extends Tasklala {
+public class MarketOppurtunities extends Task {
 
     private static Logger logger = LoggerFactory.getLogger(MarketOppurtunities.class);
     
@@ -42,9 +42,13 @@ public class MarketOppurtunities extends Tasklala {
             // regionRepository.getRegionByName("TheForge"), 
             regionRepository.getRegionByName("Domain"));
 
-        List<MarketOrdersResponse> orders = new ArrayList<MarketOrdersResponse>(){};
+        List<MarketOrdersResponse> orders = new ArrayList<MarketOrdersResponse>(){
+            private static final long serialVersionUID = -8113636192680648062L;
+        };
 
         regions.forEach(region -> {
+            
+            logger.info("{}",regions);
             try {
                 orders.addAll(MarketOrders.getRegionalItemOrders(region.getRegionID()));
             } catch (ApiException e) {
@@ -146,16 +150,16 @@ public class MarketOppurtunities extends Tasklala {
 
     public HashMap<Long,HashMap<Integer,MutablePair<Double,Double>>> getBuyAndSellPrice(List<MarketOrdersResponse> orders) {
         // this returns a map that given a location id provides a map that given a item id provides a pair with lowest sell price / highest buy price
-        return orders.stream().filter(order -> order.getLocationId() == 60008494L).reduce(new HashMap<Long,HashMap<Integer,MutablePair<Double,Double>>>(),
+        return orders.stream().reduce(new HashMap<Long,HashMap<Integer,MutablePair<Double,Double>>>(),
             (map, order) -> {
                 HashMap<Integer,MutablePair<Double,Double>> itemsAtLocationMap = map.getOrDefault(order.getLocationId(), new HashMap<Integer,MutablePair<Double,Double>>());
-                MutablePair<Double,Double> prices = itemsAtLocationMap.getOrDefault(order.getTypeId(), MutablePair.of(Double.MAX_VALUE, Double.MIN_VALUE));
+                MutablePair<Double,Double> prices = itemsAtLocationMap.getOrDefault(order.getTypeId(), MutablePair.of(Double.MIN_VALUE, Double.MAX_VALUE));
                 
                 // update the pair if the order is a buy order
-                if (Boolean.TRUE.equals(order.getIsBuyOrder())) prices.setLeft(prices.getLeft() > order.getPrice() ? order.getPrice():prices.getLeft() );
+                if (Boolean.TRUE.equals(order.getIsBuyOrder())) prices.setLeft(prices.getLeft() < order.getPrice() ? order.getPrice():prices.getLeft() );
                 
                 // update the pair if the order is a sell order
-                if (Boolean.FALSE.equals(order.getIsBuyOrder())) prices.setRight(prices.getRight() < order.getPrice() ? order.getPrice():prices.getRight() );
+                if (Boolean.FALSE.equals(order.getIsBuyOrder())) prices.setRight(prices.getRight() > order.getPrice() ? order.getPrice():prices.getRight() );
 
                 itemsAtLocationMap.put(order.getTypeId(), prices);
                 map.put(order.getLocationId(), itemsAtLocationMap);

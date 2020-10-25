@@ -2,6 +2,7 @@ package com.kaldie.eveindustry.service.experiments;
 
 import java.util.Map.Entry;
 
+import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
@@ -18,15 +19,14 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 
 @Component
-@Configuration
 @RequiredArgsConstructor
 public class ExperimentRunner implements ApplicationContextAware {
 
     private Logger logger = LoggerFactory.getLogger(ExperimentRunner.class);
-    // @Nonnull
+    
+    @Nonnull
     private ApplicationContext appContext;
 
-    @PostConstruct
     public void runAll() {
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
 
@@ -53,7 +53,7 @@ public class ExperimentRunner implements ApplicationContextAware {
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(ApplicationContext applicationContext) {
         appContext = applicationContext;
     }
 
