@@ -77,7 +77,7 @@ public class MarketOrders {
     }
 
 
-    private static void exampleParsing(List<MarketOrdersResponse> orders) {
+    public static void exampleParsing(List<MarketOrdersResponse> orders) {
         logger.info("Found {} orders", orders.size());
         Predicate<MarketOrdersResponse> isBuyOrder = MarketOrdersResponse::getIsBuyOrder;
         Pair<Double,Double> xx = orders.stream().parallel()
