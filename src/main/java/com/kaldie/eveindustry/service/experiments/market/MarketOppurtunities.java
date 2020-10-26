@@ -1,5 +1,7 @@
 package com.kaldie.eveindustry.service.experiments.market;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,6 +11,9 @@ import java.util.function.DoubleBinaryOperator;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.kaldie.eveindustry.client.esi.MarketOrders;
 import com.kaldie.eveindustry.repository.type_id.TypeIDRepository;
 import com.kaldie.eveindustry.repository.type_id.TypeId;
@@ -31,8 +36,8 @@ import net.troja.eve.esi.model.MarketOrdersResponse;
 public class MarketOppurtunities extends Task {
 
     private static Logger logger = LoggerFactory.getLogger(MarketOppurtunities.class);
-    
-    private final RegionRepository regionRepository;   
+
+    private final RegionRepository regionRepository;
     private final TypeIDRepository typeIdRepository;
 
     @Override
@@ -57,19 +62,41 @@ public class MarketOppurtunities extends Task {
             }
         });
 
-        HashMap<Integer, Double> buyprices = getBuyPrice(orders.stream().filter(order -> order.getLocationId() == 60008494).collect(Collectors.toList()));
-        HashMap<Integer, Double> sellprices = getSellPrice(orders.stream().filter(order -> order.getLocationId() == 60008494).collect(Collectors.toList()));
+        // List<Integer> items = Arrays.asList(34,35,36,37,38,39);
+        // orders.removeIf(order -> !items.contains(order.getTypeId()));
+        // writeOrdersToFile(orders);
+
+        HashMap<Integer, Double> buyprices = getBuyPrice(orders.stream().filter(order -> order.getLocationId() == 60008494L).collect(Collectors.toList()));
+        HashMap<Integer, Double> sellprices = getSellPrice(orders.stream().filter(order -> order.getLocationId() == 60008494L).collect(Collectors.toList()));
         logger.info("Trit: buy {} sell: {}",buyprices.get(34), sellprices.get(34));
         logger.info("pye: buy {} sell: {}",buyprices.get(35), sellprices.get(35));
         // HashMap<Integer, Double> sell = getSellPrice(orders);
 
         HashMap<Long,HashMap<Integer,MutablePair<Double,Double>>> buyAndSellPrices = getBuyAndSellPrice(orders);
         MutablePair<Double,Double> tritAtAmarr = buyAndSellPrices.get(60008494L).get(34);
+        MutablePair<Double,Double> pyeAtAmarr = buyAndSellPrices.get(60008494L).get(35);
         logger.info("Trit: buy {} sell: {}",tritAtAmarr.left, tritAtAmarr.right);
+        logger.info("Pye: buy {} sell: {}",pyeAtAmarr.left, pyeAtAmarr.right);
 
         // filterOrdersOnDifferential(buyAndSellPrices);
 
     }
+
+    private static void writeOrdersToFile(List<MarketOrdersResponse> orders) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        try {
+            mapper.writeValue(new File("target/example_orders2.json"), orders);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+
+
+    }
+
 
     public void filterOrdersOnDifferential(HashMap<Long,HashMap<Integer,MutablePair<Double,Double>>> orders) {
                
@@ -169,11 +196,11 @@ public class MarketOppurtunities extends Task {
                 // for each location key
                 map1.keySet().forEach(regionKey ->
                     // merge the location by
-                    map1.merge(regionKey, map2.get(regionKey), (value1, value2) -> {
+                    map1.merge(regionKey, map2.getOrDefault(regionKey, new HashMap<>()), (value1, value2) -> {
                         // for each item type
                         value1.keySet().forEach(itemKey -> {
                             // update the pair to the lowest sell price and highest buy price if they collide
-                            map1.get(regionKey).merge(itemKey, map2.get(regionKey).get(itemKey), (pair1, pair2) -> {
+                            map1.get(regionKey).merge(itemKey, map2.getOrDefault(regionKey, new HashMap<>()).getOrDefault(itemKey, MutablePair.of(Double.MIN_VALUE, Double.MAX_VALUE)), (pair1, pair2) -> {
                                 pair1.left = pair1.left > pair2.left ? pair2.left : pair1.left;
                                 pair1.right = pair1.right < pair2.right ? pair2.right : pair1.right;
                                 return pair1;

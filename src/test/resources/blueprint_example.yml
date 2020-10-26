@@ -1,0 +1,20 @@
+682:
+    activities:
+        copying:
+            time: 480
+        manufacturing:
+            materials:
+            -   quantity: 133
+                typeID: 38
+            -   quantity: 123
+                typeID: 34
+            products:
+            -   quantity: 1
+                typeID: 166
+            time: 600
+        research_material:
+            time: 210
+        research_time:
+            time: 210
+    blueprintTypeID: 682
+    maxProductionLimit: 300

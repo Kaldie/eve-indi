@@ -1,12 +1,20 @@
 package com.kaldie.eveindustry.repository;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.kaldie.eveindustry.EveIndustryApplicationTestConfiguration;
-import com.kaldie.eveindustry.repository.required_materials.RequiredMaterialsEntity;
-import com.kaldie.eveindustry.repository.required_materials.RequiredMaterialsRepository;
+import com.kaldie.eveindustry.repository.type_id.TanslatedString;
+import com.kaldie.eveindustry.repository.type_id.TypeIDRepository;
+import com.kaldie.eveindustry.repository.type_id.TypeId;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -14,26 +22,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 
-
-@AutoConfigureTestDatabase(replace=Replace.NONE) // using a predefined test database
-@ContextConfiguration(classes = {EveIndustryApplicationTestConfiguration.class})
+@AutoConfigureTestDatabase(replace = Replace.NONE) // using a predefined test database
+@ContextConfiguration(classes = { EveIndustryApplicationTestConfiguration.class })
 @DataJpaTest
 class TypeIDRepositoryTest {
 
     @Autowired
-    private RequiredMaterialsRepository requiredMaterialsRepository;
-    
+    private TypeIDRepository typeRepository;
+
     @BeforeAll
-    void loadRequiredData() {
+    static void loadTestData(@Autowired TypeIDRepository lalal) throws IOException {
+        final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        Map<Long, TypeId> typeMap = mapper.readValue(
+            new ClassPathResource("typeid_example.yml").getFile(),
+            new TypeReference<Map<Long, TypeId>>() { });
+        
+        // Add the id to the entry
+        for (Map.Entry<Long, TypeId> entry : typeMap.entrySet()) {
+            entry.getValue().setId(entry.getKey());
+        }
+
+        assertNotNull(lalal);
+        assertNotNull(typeMap);
+        assertNotNull(typeMap.values());
+
+        lalal.saveAll(typeMap.values());
     }
 
     @Test
-    void retrieveRequiredMaterials() {
-        List<RequiredMaterialsEntity> materials = requiredMaterialsRepository.getRequiredMaterials(11202L);
-        assertNotEquals(0, materials.size());
+    void testCreationAndRetrievalOfNewTypeId() {
+        assertNotNull(typeRepository.findById(34L));
+    }
 
+    @Test
+    void testRetrieveByName() {
+        assertNotNull(typeRepository.findByEnglishName("Tritanium"));
     }
     
 }

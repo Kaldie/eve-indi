@@ -1,0 +1,259 @@
+34:
+    basePrice: 2.0
+    description:
+        de: 'Die grundlegende Basiskomponente aller Strukturen im All. Ein sehr hartes,
+            aber dennoch biegsames Metall. Kann nicht zum Bau von Unterkünften verwendet
+            werden, da es bei atmosphärischen Temperaturen instabil wird. Ist in den
+            zentralen Regionen des bekannten Universums sehr verbreitet. Kann durch
+            die Aufbereitung von folgenden Erzen und ihren Varianten in Sonnensystemen
+            des Hochsicherheitsraums erhalten werden: <a href=showinfo:1230>Veldspar</a>,
+            <a href=showinfo:1228>Scordite</a>, <a href=showinfo:18>Plagioclase</a>.
+            Es kommt außerdem in sehr großen Mengen in seltenen Erzen wie <a href=showinfo:19>Spodumain</a>,
+            <a href=showinfo:52316>Bezdnazin</a>, <a href=showinfo:52315>Rakovene</a>
+            und <a href=showinfo:52306>Talassonit</a> vor.'
+        en: "The main building block in space structures. A very hard, yet bendable
+            metal. Cannot be used in human habitats due to its instability at atmospheric
+            temperatures. Very common throughout the central regions of known universe.\r\n\r\nMay
+            be obtained by reprocessing the following ores and their variations available
+            in high security status star systems:\r\n<a href=showinfo:1230>Veldspar</a>,
+            <a href=showinfo:1228>Scordite</a>, <a href=showinfo:18>Plagioclase</a>\r\n\r\nIt
+            is also present in huge amounts in rare ores like <a href=showinfo:19>Spodumain</a>,
+            <a href=showinfo:52316>Bezdnacine</a>, <a href=showinfo:52315>Rakovene</a>
+            and <a href=showinfo:52306>Talassonite</a>."
+        fr: 'Il s''agit du principal bloc de construction pour les structures spatiales.
+            Ce métal est à la fois très résistant et malléable. Il ne peut être utilisé
+            pour les structures d''habitation humaine en raison de son instabilité
+            aux températures atmosphériques. Il est très répandu dans les régions
+            centrales de l''univers connu. Peut être obtenu en retraitant les minerais
+            suivants et leurs variantes, disponibles dans les systèmes stellaires
+            de haute sécurité : <a href=showinfo:1230>veldspar</a>, <a href=showinfo:1228>scordite</a>,
+            <a href=showinfo:18>plagioclase</a> Il est également présent en quantité
+            considérable dans les minerais rares comme le <a href=showinfo:19>spodumain</a>,
+            la <a href=showinfo:52316>bezdnacine</a>, le <a href=showinfo:52315>rakovene</a>
+            et la <a href=showinfo:52306>talassonite</a>.'
+        ja: 宇宙建造物の中核的な建設資材。高い硬度を持ちながら、曲げることが可能な金属。大気温度の中では不安定であるため、人間の住居には使用できない。宇宙に広く存在する。以下の鉱石を再処理することによって得ることができる。
+            セキュリティステータスが<color='0xFFFF0000'>0.0</color>以下のソーラーシステム： <a href=showinfo:22>アーコナー</a>、<a
+            href=showinfo:17425>クリムゾンアーコナー</a>、<a href=showinfo:17426>プライムアーコナー</a>
+            <a href=showinfo:1225>クロカイト</a>、<a href=showinfo:17432>シャープクロカイト</a>、<a
+            href=showinfo:17433>クリスタルインクロカイト</a> <a href=showinfo:1232>ダークオークル</a>
+            、<a href=showinfo:17436>オニキスオークル</a>、<a href=showinfo:17437>オブシディアンオークル</a>
+            <a href=showinfo:19>スポンデュメイン</a>、<a href=showinfo:17466>ブライトスポデュメイン</a>、<a
+            href=showinfo:17467>グリーミングスポデュメイン</a> セキュリティステータスが<color='0xFFFF4D00'>0.2</color>以下のソーラーシステム：
+            <a href=showinfo:1231>ヘモファイト</a>、<a href=showinfo:17444>ビビッドヘモファイト</a>
+            、<a href=showinfo:17445>レディアントヘモファイト</a> セキュリティステータスが<color='0xFF00FF00'>0.7</color>以下のソーラーシステム：
+            <a href=showinfo:20>ケルナイト</a>、<a href=showinfo:17452>ルミナスケルナイト</a>、<a
+            href=showinfo:17453>ファイヤリーケルナイト</a> <a href=showinfo:1227>オンバー</a>、<a
+            href=showinfo:17867>銀色オンバー</a>、<a href=showinfo:17868>黄金色オンバー</a> セキュリティステータスが<color='0xFF4DFFCC'>0.9</color>以下のソーラーシステム：
+            <a href=showinfo:18>プラジオクレイス</a>、<a href=showinfo:17455>瑠璃色プラジオクレイス</a>、
+            <a href=showinfo:17456>リッチプラジオクレイス</a> <a href=showinfo:1224>パイロゼリーズ</a>、<a
+            href=showinfo:17459>ソリッドパイロゼリーズ</a>、<a href=showinfo:17460>粘着質なパイロゼリーズ</a>
+            セキュリティステータスが<color='0xFF33FFFF'>1.0</color>以下のソーラーシステム： <a href=showinfo:1228>スコダイト</a>、<a
+            href=showinfo:17463>凝縮スコダイト</a>、<a href=showinfo:17464>マッシブスコダイト</a> <a
+            href=showinfo:1230>ベルドスパー</a>、<a href=showinfo:17470>高濃度ベルドスパー</a>、<a
+            href=showinfo:17471>高密度ベルドスパー</a>
+        ru: 'Основной материал для строительства космических сооружений. Очень твёрдый,
+            но при этом гибкий металл. Непригоден для использования в местах обитания
+            человека из-за своей нестабильности при атмосферных температурах. Очень
+            распространён в центральных секторах известной вселенной. Добывается путём
+            переработки нижеперечисленных руд и их разновидностей в системах с высоким
+            уровнем безопасности: <a href=showinfo:1230>вельдспар</a>, <a href=showinfo:1228>скордит</a>,
+            <a href=showinfo:18>плагиоклаз</a> Кроме того, в огромных количествах
+            присутствует в редких рудах, таких как <a href=showinfo:19>сподумейн</a>,
+            <a href=showinfo:52316>безднацин</a>, <a href=showinfo:52315>раковин</a>
+            и <a href=showinfo:52306>талассонит</a>.'
+        zh: '太空建筑的主要建造材料。一种非常坚硬但有韧性的金属。由于它在大气温度下不稳定，因此不能用于人类生活环境。在宇宙中很常见。
+
+
+
+
+            可以从下列矿石中提炼获得：
+
+
+
+
+            安全等级<color=''0xFFFF0000''>0.0</color>及以下星系：
+
+
+            <a href=showinfo:22>艾克诺岩</a>、<a href=showinfo:17425>红色艾克诺岩</a>、<a href=showinfo:17426>艾克诺精华岩</a>
+
+
+            <a href=showinfo:1225>克洛基石</a>、<a href=showinfo:17432>斜克洛基石</a>、<a href=showinfo:17433>克洛基水晶</a>
+
+
+            <a href=showinfo:1232>黑赭石</a>、<a href=showinfo:17436>条纹赭</a>、<a href=showinfo:17437>黑曜赭石</a>
+
+
+            <a href=showinfo:19>灰岩</a>、<a href=showinfo:17466>亮灰岩</a>、<a href=showinfo:17467>发光灰岩</a>
+
+
+
+
+            安全等级<color=''0xFFFF4D00''>0.2</color>及以下星系：
+
+
+            <a href=showinfo:1231>希莫非特</a>、<a href=showinfo:17444>多色希莫非特</a>、<a href=showinfo:17445>辐射希莫非特</a>
+
+
+
+
+            安全等级<color=''0xFF00FF00''>0.7</color>及以下星系：
+
+
+            <a href=showinfo:20>水硼砂</a>、<a href=showinfo:17452>发光水硼砂</a>、<a href=showinfo:17453>灼热水硼砂</a>
+
+
+            <a href=showinfo:1227>奥贝尔石</a>、<a href=showinfo:17867>银色奥贝尔石</a>、<a href=showinfo:17868>金色奥贝尔石</a>
+
+
+
+
+            安全等级<color=''0xFF4DFFCC''>0.9</color>及以下星系：
+
+
+            <a href=showinfo:18>斜长岩</a>、<a href=showinfo:17455>蓝色斜长岩</a>、<a href=showinfo:17456>富斜长岩</a>
+
+
+            <a href=showinfo:1224>干焦岩</a>、<a href=showinfo:17459>固体干焦岩</a>、<a href=showinfo:17460>流体干焦岩</a>
+
+
+
+
+            安全等级<color=''0xFF33FFFF''>1.0</color>及以下星系：
+
+
+            <a href=showinfo:1228>灼烧岩</a>、<a href=showinfo:17463>浓缩灼烧岩</a>、<a href=showinfo:17464>厚灼烧岩</a>
+
+
+            <a href=showinfo:1230>凡晶石</a>、<a href=showinfo:17470>富凡晶石</a>、<a href=showinfo:17471>厚质凡晶石</a>'
+    groupID: 18
+    iconID: 22
+    marketGroupID: 1857
+    name:
+        de: Tritanium
+        en: Tritanium
+        fr: Tritanium
+        ja: トリタニウム
+        ru: Tritanium
+        zh: 三钛合金
+    portionSize: 1
+    published: true
+    volume: 0.01
+166:
+    basePrice: 45500.0
+    groupID: 23
+    iconID: 34
+    name:
+        de: Clone Grade Gamma
+        en: Clone Grade Gamma
+        fr: Clone grade Gamma
+        ja: クローングレードガンマ
+        ru: Клон-тело категории «Гамма»
+        zh: C级克隆
+    portionSize: 1
+    published: false
+    volume: 1.0
+38:
+    basePrice: 512.0
+    description:
+        de: 'Ein hoch flüchtiges Mineral, das nur während einer Supernova gebildet
+            wird, wodurch das Ausmaß seiner Verbreitung stark einschränkt wird. Ein
+            unverzichtbarer Bestandteil in der Kapselherstellung, was es sehr begehrt
+            macht. Kann durch die Aufbereitung von folgenden Erzen und ihren Varianten
+            in Sonnensystemen des Niedersicherheitsraums erhalten werden: <a href=showinfo:1226>Jaspet</a>,
+            <a href=showinfo:1231>Hemorphite</a>, <a href=showinfo:21>Hedbergite</a>,
+            <a href=showinfo:1232>Dunkles Ochre</a>, <a href=showinfo:1225>Crokite</a>.
+            Es kommt außerdem in sehr großen Mengen in seltenen Erzen wie <a href=showinfo:19>Spodumain</a>
+            und <a href=showinfo:52306>Talassonit</a> vor.'
+        en: "A highly volatile mineral only formed during supernovas, thus severely
+            limiting the extent of its distribution. Vital ingredient in capsule production,
+            making it very coveted.\r\n\r\nMay be obtained by reprocessing the following
+            ores and their variations available in low security status star systems:\r\n<a
+            href=showinfo:1226>Jaspet</a>, <a href=showinfo:1231>Hemorphite</a>, <a
+            href=showinfo:21>Hedbergite</a>, <a href=showinfo:1232>Dark Ochre</a>,
+            <a href=showinfo:1225>Crokite</a>\r\n\r\nIt is also present in significant
+            amounts in rare ores like <a href=showinfo:19>Spodumain</a> and <a href=showinfo:52306>Talassonite</a>."
+        fr: 'Ce minerai très volatile ne se forme que lors de la transformation d''une
+            étoile en supernova. Il est donc très rare d''en trouver. Ce produit indispensable
+            à la fabrication des capsules est extrêmement convoité. Peut être obtenu
+            en retraitant les minerais suivants et leurs variantes, disponibles dans
+            les systèmes stellaires de basse sécurité : <a href=showinfo:1226>jaspet</a>,
+            <a href=showinfo:1231>hemorphite</a>, <a href=showinfo:21>hedbergite</a>,
+            <a href=showinfo:1232>ochre foncé</a>, <a href=showinfo:1225>crokite</a>
+            Il est également présent en quantité considérable dans les minerais rares
+            comme le <a href=showinfo:19>spodumain</a> et la <a href=showinfo:52306>talassonite</a>.'
+        ja: "揮発性の高い鉱石で、超新星爆発によってのみ生成される。そのため、流通は極めて限られている。カプセル生産に欠かせない原料で、非常に需要が高い。\n\t\t\n以下の鉱石を再処理することによって得ることができる。\n\t\t\nセキュリティステータスが<color='0xFFFF0000'>0.0</color>以下のソーラーシステム：\n<a
+            href=showinfo:1225>クロカイト</a>、<a href=showinfo:17432>シャープクロカイト</a>、<a href=showinfo:17433>クリスタルインクロカイト</a>\n<a
+            href=showinfo:1232>ダークオークル</a>、<a href=showinfo:17436>オニキスオークル</a>、<a
+            href=showinfo:17437>オブシディアンオークル</a>\n\nセキュリティステータスが<color='0xFFFF4D00'>0.2</color>以下のソーラーシステム：\n<a
+            href=showinfo:21>ヘッドバーガイト</a>、<a href=showinfo:17440>ガラス質ヘッドバーガイト</a>、<a
+            href=showinfo:17441>グレイズドヘッドバーガイト</a>\n<a href=showinfo:1231>ヘモファイト</a>、<a
+            href=showinfo:17444>ビビッドヘモファイト</a>、<a href=showinfo:17445>レディアントヘモファイト</a>\n\nセキュリティステータスが<color='0xFFE58000'>0.4</color>以下のソーラーシステム：\n<a
+            href=showinfo:1226>ジャスペット</a>、<a href=showinfo:17448>ピュアジャスペット</a>、<a
+            href=showinfo:17449>プリスティンジャスペット</a>\n\nセキュリティステータスが<color='0xFF4DFFCC'>0.9</color>以下のソーラーシステム：\n<a
+            href=showinfo:1224>パイロゼリーズ</a>、<a href=showinfo:17459>ソリッドパイロゼリーズ</a>、<a
+            href=showinfo:17460>粘着質なパイロゼリーズ</a>"
+        ru: 'Этот легколетучий минерал образуется только при взрыве сверхновых звёзд
+            и считается очень редким. Он является важнейшим элементом производства
+            капсул и поэтому ценится очень высоко. Добывается путём переработки нижеперечисленных
+            руд и их разновидностей в системах с низким уровнем безопасности: <a href=showinfo:1226>джаспет</a>,
+            <a href=showinfo:1231>хеморфит</a>, <a href=showinfo:21>хедбергит</a>,
+            <a href=showinfo:1232>тёмная охра</a>, <a href=showinfo:1225>крокит</a>
+            Кроме того, в огромных количествах присутствует в редких рудах, таких
+            как <a href=showinfo:19>сподумейн</a> и <a href=showinfo:52306>талассонит</a>.'
+        zh: '一种只有在超新星中才能形成的极不稳定矿物，这在很大程度上限制了它的分布。它是太空舱生产中重要的材料，因此被许多人觊觎。
+
+
+
+
+            可以从下列矿石中提炼获得：
+
+
+
+
+            安全等级<color=''0xFFFF0000''>0.0</color>及以下星系：
+
+
+            <a href=showinfo:1225>克洛基石</a>、<a href=showinfo:17432>斜克洛基石</a>、<a href=showinfo:17433>克洛基水晶</a>
+
+
+            <a href=showinfo:1232>黑赭石</a>、<a href=showinfo:17436>条纹赭</a>、<a href=showinfo:17437>黑曜赭石</a>
+
+
+
+
+            安全等级<color=''0xFFFF4D00''>0.2</color>及以下星系：
+
+
+            <a href=showinfo:21>同位原矿</a>、<a href=showinfo:17440>玻璃状同位原矿</a>、<a href=showinfo:17441>光面同位原矿</a>
+
+
+            <a href=showinfo:1231>希莫非特</a>、<a href=showinfo:17444>多色希莫非特</a>、<a href=showinfo:17445>辐射希莫非特</a>
+
+
+
+
+            安全等级<color=''0xFFE58000''>0.4</color>及以下星系：
+
+
+            <a href=showinfo:1226>杰斯贝矿</a>、<a href=showinfo:17448>纯杰斯贝矿</a>、<a href=showinfo:17449>朴质杰斯贝矿</a>
+
+
+
+
+            安全等级<color=''0xFF4DFFCC''>0.9</color>及以下星系：
+
+
+            <a href=showinfo:1224>干焦岩</a>、<a href=showinfo:17459>固体干焦岩</a>、<a href=showinfo:17460>流体干焦岩</a>'
+    groupID: 18
+    iconID: 1201
+    marketGroupID: 1857
+    name:
+        de: Nocxium
+        en: Nocxium
+        fr: Nocxium
+        ja: ノキシウム
+        ru: Nocxium
+        zh: 超新星诺克石
+    portionSize: 1
+    published: true
+    volume: 0.01

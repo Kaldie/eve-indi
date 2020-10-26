@@ -18,4 +18,13 @@ public interface TypeIDRepository extends CrudRepository<TypeId,Long>{
         " " + 
         "WHERE t.id = :id")
     Optional<TypeId> findLoadedTypeId(@Param("id") Long id);
+
+    
+    @Query(value = 
+        "SELECT t " + 
+        "FROM TypeId t "  + 
+        "JOIN FETCH t.name " + 
+        " " + 
+        "WHERE t.name.en = :name")
+    Optional<TypeId> findByEnglishName(@Param("name") String name);
 }
