@@ -36,7 +36,7 @@ public class Planet {
     @JsonIgnore
     private List<Moon> moons;
     
-    private int celetialIndex;
+    private int celestialIndex;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id", referencedColumnName = "id")

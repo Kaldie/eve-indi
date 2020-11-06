@@ -16,6 +16,7 @@ import com.kaldie.eveindustry.repository.blueprint.BlueprintRepository;
 import com.kaldie.eveindustry.repository.type_id.TypeIDRepository;
 import com.kaldie.eveindustry.repository.type_id.TypeId;
 import com.kaldie.eveindustry.repository.type_id.type_materials.TypeMaterial;
+import com.kaldie.eveindustry.repository.universe.Planet;
 import com.kaldie.eveindustry.repository.universe.Region;
 import com.kaldie.eveindustry.repository.universe.RegionRepository;
 import com.kaldie.eveindustry.repository.universe.RegionVisitor;
@@ -130,6 +131,7 @@ public class ESDReader {
                 solarSystemRepository.save(system);
             } catch (DataIntegrityViolationException e) {
                 logger.error("Could not insert system with id: {}!", system.getSolarSystemID());
+                logger.error("Planets with the following ids: {}",system.getPlanets().stream().map(Planet::getId).toArray());
             }
         }
     }

@@ -1,6 +1,7 @@
 CREATE TABLE unique_name (
 	id bigint NOT NULL,
 	group_id int,
+	[name] varchar(255),
 	CONSTRAINT PK__unique_name PRIMARY KEY (id),
 	INDEX IX_unique_name NONCLUSTERED (id, name)
 )
@@ -23,7 +24,7 @@ CREATE TABLE solar_system (
 
 CREATE TABLE planet (
 	id bigint NOT NULL,
-	celetial_index int,
+	celestial_index int,
 	solar_system_id bigint,
 	type_id bigint,
 	CONSTRAINT PK__planet PRIMARY KEY (id),

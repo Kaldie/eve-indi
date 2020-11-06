@@ -211,7 +211,26 @@ public class MarketOppurtunities extends Task {
                 return map;
             },
             (map1, map2) -> {
-                // for each location keyaaaaaaaaqqqqqqqqqqq
+                  // for each location key
+                  map1.keySet().forEach(regionKey ->
+                  // merge the location by
+                  map1.merge(regionKey, map2.getOrDefault(regionKey, new HashMap<>()), (value1, value2) -> {
+                      // for each item type
+                      value1.keySet().forEach(itemKey -> {
+                          // update the pair to the lowest sell price and highest buy price if they collide
+                          map1.get(regionKey).merge(itemKey, map2.getOrDefault(regionKey, new HashMap<>()).getOrDefault(itemKey, MutablePair.of(Double.MIN_VALUE, Double.MAX_VALUE)), (pair1, pair2) -> {
+                              pair1.left = pair1.left > pair2.left ? pair2.left : pair1.left;
+                              pair1.right = pair1.right < pair2.right ? pair2.right : pair1.right;
+                              return pair1;
+                          });
+                      });
+                      return value1;
+                  })
+              );
+          return map1;
+      });
+    }
+
     public HashMap<Integer, Double> getBuyPrice(List<MarketOrdersResponse> orders) {
         return getPrice(
             orders, // the actual orders
