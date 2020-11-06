@@ -11,6 +11,9 @@ import java.util.function.DoubleBinaryOperator;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -44,19 +47,19 @@ public class MarketOppurtunities extends Task {
     public void run() {
 
         List<Region> regions = Arrays.asList(
-            // regionRepository.getRegionByName("TheForge"), 
-            regionRepository.getRegionByName("Domain"));
+                // regionRepository.getRegionByName("TheForge"),
+                regionRepository.getRegionByName("Domain"));
 
-        List<MarketOrdersResponse> orders = new ArrayList<MarketOrdersResponse>(){
+        List<MarketOrdersResponse> orders = new ArrayList<MarketOrdersResponse>() {
             private static final long serialVersionUID = -8113636192680648062L;
         };
 
         regions.forEach(region -> {
-            
-            logger.info("{}",regions);
+
+            logger.info("{}", regions);
             try {
                 orders.addAll(MarketOrders.getRegionalItemOrders(region.getRegionID()));
-            } catch (ApiException e) {
+            } catch ( Exception e) {
                 logger.warn("Could not get all orders from {}!", region.getName());
                 logger.error(e.toString());
             }
@@ -64,21 +67,27 @@ public class MarketOppurtunities extends Task {
 
         // List<Integer> items = Arrays.asList(34,35,36,37,38,39);
         // orders.removeIf(order -> !items.contains(order.getTypeId()));
-        // writeOrdersToFile(orders);
+        writeOrdersToFile(orders);
 
-        HashMap<Integer, Double> buyprices = getBuyPrice(orders.stream().filter(order -> order.getLocationId() == 60008494L).collect(Collectors.toList()));
-        HashMap<Integer, Double> sellprices = getSellPrice(orders.stream().filter(order -> order.getLocationId() == 60008494L).collect(Collectors.toList()));
-        logger.info("Trit: buy {} sell: {}",buyprices.get(34), sellprices.get(34));
-        logger.info("pye: buy {} sell: {}",buyprices.get(35), sellprices.get(35));
+        // HashMap<Integer, Double> buyprices = getBuyPrice(orders.stream().filter(order
+        // -> order.getLocationId() == 60008494L).collect(Collectors.toList()));
+        // HashMap<Integer, Double> sellprices =
+        // getSellPrice(orders.stream().filter(order -> order.getLocationId() ==
+        // 60008494L).collect(Collectors.toList()));
+        // logger.info("Trit: buy {} sell: {}",buyprices.get(34), sellprices.get(34));
+        // logger.info("pye: buy {} sell: {}",buyprices.get(35), sellprices.get(35));
         // HashMap<Integer, Double> sell = getSellPrice(orders);
 
-        HashMap<Long,HashMap<Integer,MutablePair<Double,Double>>> buyAndSellPrices = getBuyAndSellPrice(orders);
-        MutablePair<Double,Double> tritAtAmarr = buyAndSellPrices.get(60008494L).get(34);
-        MutablePair<Double,Double> pyeAtAmarr = buyAndSellPrices.get(60008494L).get(35);
-        logger.info("Trit: buy {} sell: {}",tritAtAmarr.left, tritAtAmarr.right);
-        logger.info("Pye: buy {} sell: {}",pyeAtAmarr.left, pyeAtAmarr.right);
+        // MutablePair<Double,Double> tritAtAmarr =
+        // buyAndSellPrices.get(60008494L).get(34);
+        // MutablePair<Double,Double> pyeAtAmarr =
+        // buyAndSellPrices.get(60008494L).get(35);
+        // logger.info("Trit: buy {} sell: {}",tritAtAmarr.left, tritAtAmarr.right);
+        // logger.info("Pye: buy {} sell: {}",pyeAtAmarr.left, pyeAtAmarr.right);
 
-        // filterOrdersOnDifferential(buyAndSellPrices);
+        HashMap<Long, HashMap<Integer, MutablePair<Double, Double>>> buyAndSellPrices = getBuyAndSellPrice(orders);
+
+        filterOrdersOnDifferential(buyAndSellPrices);
 
     }
 
@@ -92,43 +101,52 @@ public class MarketOppurtunities extends Task {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
-
-
     }
-
 
     public void filterOrdersOnDifferential(HashMap<Long,HashMap<Integer,MutablePair<Double,Double>>> orders) {
                
-        HashMap<Long,HashMap<Integer,MutablePair<Double,Double>>> filteredOrders = (HashMap<Long,HashMap<Integer,MutablePair<Double,Double>>>)
-            orders.entrySet().stream()
-            // .filter(entry -> entry.getValue().size() > 10000)
-            .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        // HashMap<Long,HashMap<Integer,MutablePair<Double,Double>>> filteredOrders = (HashMap<Long,HashMap<Integer,MutablePair<Double,Double>>>)
+        //     orders.entrySet().stream()
+        //     // .filter(entry -> entry.getValue().size() > 10000)
+        //     .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 
-        filteredOrders.values().forEach(locationEntry -> {
-            if (locationEntry != null) {
-                logger.info("{}", locationEntry);
-                if (locationEntry.entrySet() != null) {
-                    locationEntry.entrySet().forEach(entry -> {
-                        if (entry != null) {
-                            MutablePair<Double,Double> prices = entry.getValue();
-                            if (prices.getLeft() *1.1 <= prices.getRight()) {
-                                if (!(locationEntry != null) && locationEntry.containsKey(entry.getKey()))
-                                    locationEntry.remove(entry.getKey()); 
+        List<Integer> removedEntries = new ArrayList<>();
+
+        orders.values().forEach(locationEntry -> {
+            if (locationEntry != null && locationEntry.entrySet() != null) {
+                // logger.info("{}", locationEntry);
+                removedEntries.clear();
+                locationEntry.entrySet().forEach(entry -> {
+                    if (entry != null) {
+                        MutablePair<Double,Double> prices = entry.getValue();
+                        if ( prices.left == Double.MIN_VALUE || prices.right == Double.MAX_VALUE ||  (prices.left * 1.2) >= prices.right ) {
+                            if ((locationEntry != null) && locationEntry.containsKey(entry.getKey())) {
+                                // logger.info("locationEntry is null: {}, has key {}, entry is null: {}, key: {}", 
+                                // locationEntry == null,
+                                // locationEntry.containsKey(entry.getKey()),
+                                // entry == null, entry.getKey());
+                                removedEntries.add(entry.getKey()); 
                             }
                         }
-                    });
-                    logger.info("{}", locationEntry);
-                }
+                    }
+                });
+
+                locationEntry.keySet().removeAll(removedEntries);
             }
         });
 
-        filteredOrders.entrySet().forEach(locationEntries -> {
+
+        orders.entrySet().forEach(locationEntries -> {
             locationEntries.getValue().entrySet().forEach(entry -> {
-                logger.info("at location: {}, Item with id: {}, has buy price: {} and sell price: {}, %diff: {}",
-                locationEntries.getKey(), 
-                typeIdRepository.findLoadedTypeId(Long.valueOf(entry.getKey())).orElse(new TypeId()).getName().getEn(), 
-                entry.getValue().getLeft(), entry.getValue().getRight(), (entry.getValue().getRight() / entry.getValue().getLeft()));
+                typeIdRepository.findLoadedTypeId(Long.valueOf(entry.getKey()))
+                .ifPresent(typeId -> {
+                    logger.info("At location: {}, Item with id: {}, has buy price: {} and sell price: {}, %diff: {}",
+                    entry.getKey(), 
+                    typeId.getName().getEn(), 
+                    entry.getValue().getLeft(), 
+                    entry.getValue().getRight(),
+                    entry.getValue().getRight() / entry.getValue().getLeft());
+                });
             });
         });
 
@@ -193,37 +211,7 @@ public class MarketOppurtunities extends Task {
                 return map;
             },
             (map1, map2) -> {
-                // for each location key
-                map1.keySet().forEach(regionKey ->
-                    // merge the location by
-                    map1.merge(regionKey, map2.getOrDefault(regionKey, new HashMap<>()), (value1, value2) -> {
-                        // for each item type
-                        value1.keySet().forEach(itemKey -> {
-                            // update the pair to the lowest sell price and highest buy price if they collide
-                            map1.get(regionKey).merge(itemKey, map2.getOrDefault(regionKey, new HashMap<>()).getOrDefault(itemKey, MutablePair.of(Double.MIN_VALUE, Double.MAX_VALUE)), (pair1, pair2) -> {
-                                pair1.left = pair1.left > pair2.left ? pair2.left : pair1.left;
-                                pair1.right = pair1.right < pair2.right ? pair2.right : pair1.right;
-                                return pair1;
-                            });
-                        });
-                        return value1;
-                    })
-                );
-            return map1;
-        });
-       
-
-    }
-
-    public HashMap<Integer, Double> getSellPrice(List<MarketOrdersResponse> orders) {
-  
-        return getPrice(
-            orders, // the actual orders
-            ((Predicate<MarketOrdersResponse>)MarketOrdersResponse::getIsBuyOrder).negate(), // only work with sell orders
-            (x, y) -> x < y ? x : y, // return min values
-            Double.MAX_VALUE ); // start with the higest possible price
-    }
-
+                // for each location keyaaaaaaaaqqqqqqqqqqq
     public HashMap<Integer, Double> getBuyPrice(List<MarketOrdersResponse> orders) {
         return getPrice(
             orders, // the actual orders
@@ -268,6 +256,7 @@ public class MarketOppurtunities extends Task {
         // TODO Auto-generated method stub
         logger.error("Breakdown");
     }
+
 
     
 }

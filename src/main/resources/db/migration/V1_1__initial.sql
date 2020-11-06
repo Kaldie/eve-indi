@@ -35,20 +35,6 @@ CREATE TABLE material (
 	CONSTRAINT PK__material__D9E4AE62327A8308 PRIMARY KEY (material_typeid)
 ) GO
 
-
--- region definition
-
--- Drop table
-
--- DROP TABLE region GO
-
-CREATE TABLE region (
-	region_id bigint NOT NULL,
-	name varchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	CONSTRAINT PK__region__3213E83FD2A8AB85 PRIMARY KEY (region_id)
-) GO
-
-
 -- skill definition
 
 -- Drop table

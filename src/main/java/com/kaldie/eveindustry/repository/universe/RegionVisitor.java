@@ -16,6 +16,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 public class RegionVisitor extends SimpleFileVisitor<Path> {
 
     List<Region> regions = new ArrayList<>();
+    List<SolarSystem> solarSystems = new ArrayList<>();
 
     // Print information about
     // each type of file.
@@ -26,32 +27,25 @@ public class RegionVisitor extends SimpleFileVisitor<Path> {
 
         if (file.getFileName().toString().equals("region.staticdata")) {
             Region region = mapper.readValue(file.toFile(), Region.class);
-            region.setName(file.getName(file.getNameCount()-2).toString());
+            region.setDirectoryName(file.getParent().toString());
             regions.add(region);
         }
-        return CONTINUE;
-    }
 
-    // Print each directory visited.
-    @Override
-    public FileVisitResult postVisitDirectory(Path dir,
-                                          IOException exc) {
-        return CONTINUE;
-    }
-
-    // If there is some error accessing
-    // the file, let the user know.
-    // If you don't override this method
-    // and an error occurs, an IOException 
-    // is thrown.
-    @Override
-    public FileVisitResult visitFileFailed(Path file,
-                                       IOException exc) {
-        System.err.println(exc);
+        if (file.getFileName().toString().equals("solarsystem.staticdata")) {
+            SolarSystem system = mapper.readValue(file.toFile(), SolarSystem.class);
+            solarSystems.add(system);
+        }
         return CONTINUE;
     }
 
     public List<Region> getRegions() {
         return this.regions;
     }
+
+    
+    public List<SolarSystem> getSolarSystems() {
+        return this.solarSystems;
+    }
+
+
 }

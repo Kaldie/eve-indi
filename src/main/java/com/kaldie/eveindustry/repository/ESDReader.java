@@ -19,6 +19,10 @@ import com.kaldie.eveindustry.repository.type_id.type_materials.TypeMaterial;
 import com.kaldie.eveindustry.repository.universe.Region;
 import com.kaldie.eveindustry.repository.universe.RegionRepository;
 import com.kaldie.eveindustry.repository.universe.RegionVisitor;
+import com.kaldie.eveindustry.repository.universe.SolarSystem;
+import com.kaldie.eveindustry.repository.universe.SolarSystemRepository;
+import com.kaldie.eveindustry.repository.universe.UniqueName;
+import com.kaldie.eveindustry.repository.universe.UniqueNamesRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +42,8 @@ public class ESDReader {
     private Collection<Blueprint> blueprints;
     private Collection<TypeMaterial> typeMaterials;
     private List<Region> regions;
+    private List<SolarSystem> solarSystems;
+    private List<UniqueName> names;
 
     private Logger logger = LoggerFactory.getLogger(ESDReader.class);
     
@@ -46,6 +52,10 @@ public class ESDReader {
     private final TypeIDRepository typeRepository;
 
     private final RegionRepository regionRepository;
+
+    private final SolarSystemRepository solarSystemRepository;
+
+    private final UniqueNamesRepository uniqueNamesRepository;
 
     public void loadEsd() {
         try {
@@ -93,20 +103,45 @@ public class ESDReader {
 
     private void storeTypeIds() throws IOException {
         if (types == null) {
-            logger.info("loading types from yml files.");
+            logger.debug("loading types from yml files.");
             this.loadTypeIds();
         }
-        logger.info("Saving types in db.");
+        logger.debug("Saving types in db.");
         typeRepository.saveAll(types);
     }
 
     private void storeRegions() throws IOException {
-        if (regions == null) {
-            logger.info("loading regions from yml files.");
+        if (regions == null || solarSystems == null) {
+            logger.debug("loading regions from yml files.");
             this.loadRegions();
         }
-        logger.info("Save regions to db.");
-        regionRepository.saveAll(regions);
+        logger.debug("Save regions to db.");
+
+        for (Region region : regions) {
+            try {
+                regionRepository.save(region);
+            } catch (DataIntegrityViolationException e) {
+                logger.error("Could not insert region with id: {}!", region.getRegionID());
+            }
+        }
+
+        for (SolarSystem system : solarSystems) {
+            try {
+                solarSystemRepository.save(system);
+            } catch (DataIntegrityViolationException e) {
+                logger.error("Could not insert system with id: {}!", system.getSolarSystemID());
+            }
+        }
+    }
+
+    private void storeNames() throws IOException {
+        if (names == null) {
+            logger.debug("loading names");
+            this.loadNames();
+        }
+
+        logger.debug("Save names to db.");
+        uniqueNamesRepository.saveAll(names);
     }
 
     public void storeEsd() throws IOException {
@@ -114,6 +149,8 @@ public class ESDReader {
         storeTypeIds();
         logger.info("Storing Blueprints");
         storeBlueprints();
+        logger.info("Storing Names");
+        storeNames();
         logger.info("Storing Regions");
         storeRegions();
     }
@@ -152,6 +189,13 @@ public class ESDReader {
         RegionVisitor regionVisitor = new RegionVisitor();
         Files.walkFileTree(Paths.get("resources/sde/fsd/universe"), regionVisitor);
         regions = regionVisitor.getRegions();
+        solarSystems = regionVisitor.getSolarSystems();
+    }
+
+    private void loadNames() throws IOException {
+        final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        names = mapper.readValue(new File("resources/sde/bsd/invUniqueNames.yaml"),
+            new TypeReference<List<UniqueName>>() { });
     }
     
 }
