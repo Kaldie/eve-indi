@@ -114,19 +114,14 @@ public class MarketOppurtunities extends Task {
 
         orders.values().forEach(locationEntry -> {
             if (locationEntry != null && locationEntry.entrySet() != null) {
-                // logger.info("{}", locationEntry);
+
                 removedEntries.clear();
                 locationEntry.entrySet().forEach(entry -> {
                     if (entry != null) {
                         MutablePair<Double,Double> prices = entry.getValue();
-                        if ( prices.left == Double.MIN_VALUE || prices.right == Double.MAX_VALUE ||  (prices.left * 1.2) >= prices.right ) {
-                            if ((locationEntry != null) && locationEntry.containsKey(entry.getKey())) {
-                                // logger.info("locationEntry is null: {}, has key {}, entry is null: {}, key: {}", 
-                                // locationEntry == null,
-                                // locationEntry.containsKey(entry.getKey()),
-                                // entry == null, entry.getKey());
-                                removedEntries.add(entry.getKey()); 
-                            }
+                        if ( prices.left == Double.MIN_VALUE || prices.right == Double.MAX_VALUE ||  (prices.left * 1.2) >= prices.right && 
+                            ( locationEntry != null && locationEntry.containsKey(entry.getKey()))) {
+                            removedEntries.add(entry.getKey()); 
                         }
                     }
                 });

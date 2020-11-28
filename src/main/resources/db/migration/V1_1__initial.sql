@@ -7,7 +7,7 @@
 CREATE TABLE activity (
 	id bigint IDENTITY(1,1) NOT NULL,
 	[time] int NOT NULL,
-	CONSTRAINT PK__activity__3213E83F197BF131 PRIMARY KEY (id)
+	CONSTRAINT PK__activity PRIMARY KEY (id)
 ) GO
 
 
@@ -19,7 +19,7 @@ CREATE TABLE activity (
 
 CREATE TABLE masteries (
 	id bigint IDENTITY(1,1) NOT NULL,
-	CONSTRAINT PK__masterie__3213E83FBD7EDA5E PRIMARY KEY (id)
+	CONSTRAINT PK__masteries PRIMARY KEY (id)
 ) GO
 
 
@@ -32,7 +32,7 @@ CREATE TABLE masteries (
 CREATE TABLE material (
 	material_typeid bigint IDENTITY(1,1) NOT NULL,
 	quantity bigint NULL,
-	CONSTRAINT PK__material__D9E4AE62327A8308 PRIMARY KEY (material_typeid)
+	CONSTRAINT PK__material PRIMARY KEY (material_typeid)
 ) GO
 
 -- skill definition
@@ -45,7 +45,7 @@ CREATE TABLE skill (
 	id bigint IDENTITY(1,1) NOT NULL,
 	[level] int NOT NULL,
 	typeid bigint NOT NULL,
-	CONSTRAINT PK__skill__3213E83F71A7C3C6 PRIMARY KEY (id)
+	CONSTRAINT PK__skill PRIMARY KEY (id)
 ) GO
 
 
@@ -65,7 +65,7 @@ CREATE TABLE tanslated_string (
 	ja nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	ru nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	zh nvarchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	CONSTRAINT PK__tanslate__3213E83F5CC98932 PRIMARY KEY (id)
+	CONSTRAINT PK__tanslate PRIMARY KEY (id)
 ) GO
 
 
@@ -78,7 +78,7 @@ CREATE TABLE tanslated_string (
 CREATE TABLE traits (
 	id bigint IDENTITY(1,1) NOT NULL,
 	iconid bigint NULL,
-	CONSTRAINT PK__traits__3213E83F8EB9CCFB PRIMARY KEY (id)
+	CONSTRAINT PK__traits PRIMARY KEY (id)
 ) GO
 
 
@@ -90,7 +90,7 @@ CREATE TABLE traits (
 
 CREATE TABLE type_material (
 	id bigint IDENTITY(1,1) NOT NULL,
-	CONSTRAINT PK__type_mat__3213E83FA5E8D088 PRIMARY KEY (id)
+	CONSTRAINT PK__type_matial PRIMARY KEY (id)
 ) GO
 
 
@@ -107,8 +107,8 @@ CREATE TABLE activities (
 	manufacturing_id bigint NULL,
 	research_material_id bigint NULL,
 	research_time_id bigint NULL,
-	CONSTRAINT PK__activiti__3213E83F771F104F PRIMARY KEY (id),
-	CONSTRAINT FK4qktn1rxtiqwad45gvquyovnm FOREIGN KEY (manufacturing_id) REFERENCES activity(id),
+	CONSTRAINT PK__activities PRIMARY KEY (id),
+	CONSTRAINT FK_activies_manufacturing FOREIGN KEY (manufacturing_id) REFERENCES activity(id),
 	CONSTRAINT FK68f70f2pg0nbwgquc07ste718 FOREIGN KEY (invention_id) REFERENCES activity(id),
 	CONSTRAINT FK7rew2dqa7d7h65w99c2wrs4i FOREIGN KEY (research_time_id) REFERENCES activity(id),
 	CONSTRAINT FKiv3g1u9rid1wfnqvhfhvlmw69 FOREIGN KEY (research_material_id) REFERENCES activity(id),
@@ -128,7 +128,7 @@ CREATE TABLE bonus (
 	importance int NOT NULL,
 	is_positive bit NOT NULL,
 	bonus_text_id bigint NULL,
-	CONSTRAINT PK__bonus__55289E4D8A787E06 PRIMARY KEY (unitid),
+	CONSTRAINT PK__bonus PRIMARY KEY (unitid),
 	CONSTRAINT FKke5tls94mrc5wm4yfwbwewy0a FOREIGN KEY (bonus_text_id) REFERENCES tanslated_string(id)
 ) GO
 
@@ -143,7 +143,7 @@ CREATE TABLE catagory (
 	id bigint IDENTITY(1,1) NOT NULL,
 	published bit NOT NULL,
 	name_id bigint NULL,
-	CONSTRAINT PK__catagory__3213E83F445B799A PRIMARY KEY (id),
+	CONSTRAINT PK__catagory PRIMARY KEY (id),
 	CONSTRAINT FKqwtvmla6ip6a19kwgvq5dcbr6 FOREIGN KEY (name_id) REFERENCES tanslated_string(id)
 ) GO
 
@@ -431,6 +431,76 @@ CREATE TABLE message_attackers (
 	CONSTRAINT FKh9u35106thclx5rywqg34sev5 FOREIGN KEY (attackers_id) REFERENCES [character](id)
 ) GO
 
+
+CREATE TABLE unique_name (
+	id bigint NOT NULL,
+	group_id int,
+	[name] varchar(255),
+	CONSTRAINT PK__unique_name PRIMARY KEY (id),
+	INDEX IX_unique_name NONCLUSTERED (id, name)
+)
+
+CREATE TABLE region (
+	id bigint,
+	CONSTRAINT PK__region PRIMARY KEY (id),
+	CONSTRAINT FK_region_unique_name FOREIGN KEY (id) REFERENCES unique_name(id)
+)
+
+CREATE TABLE solar_system (
+	id bigint NOT NULL,
+	border bit,
+	hub bit,
+	region_id bigint,
+	CONSTRAINT PK__solar_system PRIMARY KEY (id),
+	CONSTRAINT FK_region_solar_system FOREIGN KEY (region_id) REFERENCES region(id),
+	CONSTRAINT FK_solar_system_unique_name FOREIGN KEY (id) REFERENCES unique_name(id)
+)
+
+CREATE TABLE planet (
+	id bigint NOT NULL,
+	celestial_index int,
+	solar_system_id bigint,
+	type_id bigint,
+	CONSTRAINT PK__planet PRIMARY KEY (id),
+	CONSTRAINT FK_solar_system FOREIGN KEY (solar_system_id) REFERENCES solar_system(id),
+	CONSTRAINT FK_planet_type_id FOREIGN KEY (type_id) REFERENCES type_id(id),
+	CONSTRAINT FK_planet_unique_name FOREIGN KEY (id) REFERENCES unique_name(id)
+)
+
+CREATE TABLE moon (
+	id bigint,
+	planet_id bigint,
+	type_id bigint,
+	CONSTRAINT PK__moon PRIMARY KEY (id),
+	CONSTRAINT FK_moon_planet FOREIGN KEY (planet_id) REFERENCES planet(id),
+	CONSTRAINT FK_moon_unique_name FOREIGN KEY (id) REFERENCES unique_name(id)
+)
+
+CREATE TABLE station (
+	id bigint NOT NULL,
+	graphic_id bigint,
+	is_conquerable bit,
+	owner_id bigint,
+	reprocessing_efficiency float,
+	type_id bigint,
+	solar_system_id bigint,
+	moon_id bigint,
+	graphical_id bigint,
+	CONSTRAINT PK__station PRIMARY KEY (id),
+	CONSTRAINT FK_station_moon FOREIGN KEY (moon_id) REFERENCES moon(id),
+	CONSTRAINT FK_station_type_id FOREIGN KEY (type_id) REFERENCES type_id(id),
+	CONSTRAINT FK_station_unique_name FOREIGN KEY (id) REFERENCES unique_name(id)
+)
+
+CREATE TABLE stargate (
+	id bigint NOT NULL,
+	destination bigint NOT NULL,
+	[location] bigint NOT NULL,
+	CONSTRAINT PK__stargate PRIMARY KEY (id),
+	CONSTRAINT FK_stargate_location_solar_system FOREIGN KEY ([location]) REFERENCES solar_system(id),
+	CONSTRAINT FK_stargate_destination_solar_system FOREIGN KEY (destination) REFERENCES solar_system(id),
+)
+
 -- character_items definition
 
 -- Drop table
@@ -444,6 +514,14 @@ CREATE TABLE character_items (
 	CONSTRAINT FKc06jl88rgp6sscdvoiokjop40 FOREIGN KEY (items_id) REFERENCES item(id),
 	CONSTRAINT FKsc040en3ye4m0sbxnny4evx2n FOREIGN KEY (character_id) REFERENCES [character](id)
 ) GO
+
+CREATE TABLE market_order (
+	id bigint NOT NULL,
+	duration INT,
+	is_buy bit,
+	issued 
+
+)
 
 create   view RequiredMaterials as 
 SELECT 

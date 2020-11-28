@@ -12,9 +12,7 @@ public class UniqueName {
     @Id
     @Column(name = "id")
     private Long itemID;
-    
-    @Column(name="group_id")
-    private Integer groupID;
+
     @Column(name="name")
     private String itemName;
 }

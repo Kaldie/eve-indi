@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.kaldie.eveindustry.repository.universe.Planet;
 import com.kaldie.eveindustry.repository.universe.SolarSystem;
+import com.kaldie.eveindustry.repository.universe.Stargate;
 
 public class SolarSystemDeserializer extends EveDeserializer<SolarSystem> {
     private static final long serialVersionUID = 1L;
@@ -35,10 +36,19 @@ public class SolarSystemDeserializer extends EveDeserializer<SolarSystem> {
         JsonNode node = jp.getCodec().readTree(jp);
         SolarSystem solarSystem = defaultDeserialisation(jp, ctxt, node);
 
-        solarSystem.setPlanets(new ArrayList<>());
+        serializePlanets(solarSystem, node, jp);
+        serializeStargates(solarSystem, node, jp);
         // JsonNode node = parser.getCodec().readTree(parser);
            
-        List<Planet> planets = new ArrayList<Planet>();
+        
+       
+        return solarSystem;
+    }
+
+    private void serializePlanets(SolarSystem solarSystem, JsonNode node, JsonParser jp) {
+
+        List<Planet> planets = new ArrayList<>();
+
         node.with("planets").fields().forEachRemaining(field -> {
             JsonParser planetParser = field.getValue().traverse();
             planetParser.setCodec(jp.getCodec());
@@ -52,10 +62,33 @@ public class SolarSystemDeserializer extends EveDeserializer<SolarSystem> {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-  
         });
 
         solarSystem.setPlanets(planets);
-        return solarSystem;
     }
+
+    private void serializeStargates(SolarSystem solarSystem, JsonNode node, JsonParser jp) {
+
+        List<Stargate> stargates = new ArrayList<>();
+
+        node.with("stargates").fields().forEachRemaining(field -> {
+            JsonParser gateParser = field.getValue().traverse();
+            gateParser.setCodec(jp.getCodec());
+           
+            try {
+                Stargate starget = gateParser.readValueAs(Stargate.class);
+                starget.setId(Long.parseLong(field.getKey()));
+                starget.setLocation(solarSystem);
+                stargates.add(starget);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
+
+        solarSystem.setStargates(stargates);
+    }
+
+
+
 }

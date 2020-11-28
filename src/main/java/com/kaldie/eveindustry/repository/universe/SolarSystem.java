@@ -36,6 +36,10 @@ public class SolarSystem {
     @JsonIgnore // this property is read via the custom Deserializer 
     private List<Planet> planets;
 
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
+    @JsonIgnore // this property is read via the custom Deserializer 
+    private List<Stargate> stargates;
+
     @ManyToOne
     @JoinColumn(name = "region_id")
     private Region region;

@@ -131,7 +131,7 @@ public class ESDReader {
                 solarSystemRepository.save(system);
             } catch (DataIntegrityViolationException e) {
                 logger.error("Could not insert system with id: {}!", system.getSolarSystemID());
-                logger.error("Planets with the following ids: {}",system.getPlanets().stream().map(Planet::getId).toArray());
+                logger.error("Planets with the following ids: {}", system.getPlanets().stream().map(Planet::getId).map(id -> Long.toString(id)).toArray());
             }
         }
     }
@@ -196,7 +196,7 @@ public class ESDReader {
 
     private void loadNames() throws IOException {
         final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        names = mapper.readValue(new File("resources/sde/bsd/invUniqueNames.yaml"),
+        names = mapper.readValue(new File("resources/sde/bsd/invNames.yaml"),
             new TypeReference<List<UniqueName>>() { });
     }
     
