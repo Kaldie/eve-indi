@@ -38,7 +38,8 @@ public class EveIndustryApplication {
 	@EventListener(ApplicationReadyEvent.class)
 	public void doSomethingAfterStartup() throws IOException {
 
-		reader.storeEsd();
+		// reader.storeEsd();
+		
 		runner.runAll();
 
 		// try {

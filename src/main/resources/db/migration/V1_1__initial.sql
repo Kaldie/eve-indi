@@ -436,6 +436,7 @@ CREATE TABLE unique_name (
 	id bigint NOT NULL,
 	group_id int,
 	[name] varchar(255),
+	[version] smallint,
 	CONSTRAINT PK__unique_name PRIMARY KEY (id),
 	INDEX IX_unique_name NONCLUSTERED (id, name)
 )
@@ -451,6 +452,7 @@ CREATE TABLE solar_system (
 	border bit,
 	hub bit,
 	region_id bigint,
+	security FLOAT,
 	CONSTRAINT PK__solar_system PRIMARY KEY (id),
 	CONSTRAINT FK_region_solar_system FOREIGN KEY (region_id) REFERENCES region(id),
 	CONSTRAINT FK_solar_system_unique_name FOREIGN KEY (id) REFERENCES unique_name(id)
@@ -496,9 +498,7 @@ CREATE TABLE stargate (
 	id bigint NOT NULL,
 	destination bigint NOT NULL,
 	[location] bigint NOT NULL,
-	CONSTRAINT PK__stargate PRIMARY KEY (id),
-	CONSTRAINT FK_stargate_location_solar_system FOREIGN KEY ([location]) REFERENCES solar_system(id),
-	CONSTRAINT FK_stargate_destination_solar_system FOREIGN KEY (destination) REFERENCES solar_system(id),
+	CONSTRAINT PK__stargate PRIMARY KEY (id)
 )
 
 -- character_items definition
@@ -508,20 +508,28 @@ CREATE TABLE stargate (
 -- DROP TABLE character_items GO
 
 CREATE TABLE character_items (
-	character_id bigint NOT NULL,
-	items_id bigint NOT NULL,
+	character_id BIGINT NOT NULL,
+	items_id BIGINT NOT NULL,
 	CONSTRAINT UK_fsup3366jljjss1s4inw01equ UNIQUE (items_id),
 	CONSTRAINT FKc06jl88rgp6sscdvoiokjop40 FOREIGN KEY (items_id) REFERENCES item(id),
 	CONSTRAINT FKsc040en3ye4m0sbxnny4evx2n FOREIGN KEY (character_id) REFERENCES [character](id)
 ) GO
 
 CREATE TABLE market_order (
-	id bigint NOT NULL,
+	id BIGINT NOT NULL,
 	duration INT,
 	is_buy bit,
-	issued 
-
-)
+	[location] BIGINT,
+	min_volume int,
+	price float,
+	[range] varchar(255),
+	volume_remain INT,
+	volume_total INT,
+	issued datetime2,
+	system_id BIGINT,
+	[type_id] BIGINT,
+	CONSTRAINT PK__market_order PRIMARY KEY (id)
+) GO
 
 create   view RequiredMaterials as 
 SELECT 

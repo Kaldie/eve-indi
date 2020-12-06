@@ -3,6 +3,7 @@ package com.kaldie.eveindustry.repository.universe;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 import lombok.Data;
 
@@ -15,4 +16,7 @@ public class UniqueName {
 
     @Column(name="name")
     private String itemName;
+
+    @Version
+    private Short version;
 }

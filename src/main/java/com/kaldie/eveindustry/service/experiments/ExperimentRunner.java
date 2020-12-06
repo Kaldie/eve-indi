@@ -27,9 +27,9 @@ public class ExperimentRunner implements ApplicationContextAware {
     public void runAll() {
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
 
-        scanner.addIncludeFilter(new AnnotationTypeFilter(com.kaldie.eveindustry.eve_indi_annotations.Experiment.class));
+        scanner.addIncludeFilter(new AnnotationTypeFilter(com.kaldie.eveindustry.annotations.Experiment.class));
 
-        for (Entry<String, Object> entry : appContext.getBeansWithAnnotation(com.kaldie.eveindustry.eve_indi_annotations.Experiment.class).entrySet()) {
+        for (Entry<String, Object> entry : appContext.getBeansWithAnnotation(com.kaldie.eveindustry.annotations.Experiment.class).entrySet()) {
             try {
                 if (entry.getValue() instanceof Task)
                 {

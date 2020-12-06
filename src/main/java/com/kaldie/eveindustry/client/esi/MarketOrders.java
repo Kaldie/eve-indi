@@ -20,40 +20,43 @@ public class MarketOrders {
 
     static Logger logger = LoggerFactory.getLogger(MarketOrders.class);
 
-    private MarketOrders() {}
+    private MarketOrders() {
+    }
 
     public static List<MarketHistoryResponse> getRegionalItemHistory(long typeId, long regionalId) throws ApiException {
         logger.info("requesting Regional history for item: {}, region:{}", typeId, regionalId);
-        return new MarketApi().getMarketsRegionIdHistory((int)regionalId, (int)typeId, null, null);
+        return new MarketApi().getMarketsRegionIdHistory((int) regionalId, (int) typeId, null, null);
     }
 
-    public static List<MarketOrdersResponse> getRegionalItemOrders(long typeId, long regionalId ) throws ApiException {
+    public static List<MarketOrdersResponse> getRegionalItemOrders(long typeId, long regionalId) throws ApiException {
         MarketApi api = new MarketApi();
-        List<MarketOrdersResponse> orders = new ArrayList<MarketOrdersResponse>(){
-			private static final long serialVersionUID = -6262036476817492616L;};
+        List<MarketOrdersResponse> orders = new ArrayList<MarketOrdersResponse>() {
+            private static final long serialVersionUID = -6262036476817492616L;
+        };
         int currentPage = 1;
         int pages;
         ApiResponse<List<MarketOrdersResponse>> response;
 
         do {
-            logger.info("Requesting market info with regional id: {} and typeId: {} and page {}", regionalId, typeId, currentPage);
-            response = api.getMarketsRegionIdOrdersWithHttpInfo("all", (int)regionalId, null, null, currentPage, (int)typeId);
+            logger.info("Requesting market info with regional id: {} and typeId: {} and page {}", regionalId, typeId,
+                    currentPage);
+            response = api.getMarketsRegionIdOrdersWithHttpInfo("all", (int) regionalId, null, null, currentPage,
+                    (int) typeId);
             logger.info("recieved a response: {}", response);
             orders.addAll(response.getData());
             pages = Integer.parseInt(response.getHeaders().get("x-pages").get(0));
             logger.info("Number of pages here: {}", pages);
             ++currentPage;
-        }
-        while (currentPage < pages);
-        
-        logger.info("Found 123{} orders", orders.size());
+        } while (currentPage <= pages);
+
+        logger.info("Found {} orders", orders.size());
         return orders;
     }
 
-    public static List<MarketOrdersResponse> getRegionalItemOrders(long regionalId ) throws ApiException {
+    public static List<MarketOrdersResponse> getRegionalItemOrders(long regionalId) throws ApiException {
         MarketApi api = new MarketApi();
 
-        List<MarketOrdersResponse> orders = new ArrayList<MarketOrdersResponse>(){
+        List<MarketOrdersResponse> orders = new ArrayList<MarketOrdersResponse>() {
             private static final long serialVersionUID = 1L;
         };
 
@@ -62,38 +65,30 @@ public class MarketOrders {
         ApiResponse<List<MarketOrdersResponse>> response;
 
         do {
-            logger.info("Requesting market info with regional id: {} for all types and page {}", regionalId, currentPage);
-            response = api.getMarketsRegionIdOrdersWithHttpInfo("all", (int)regionalId, null, null, currentPage, null);
+            logger.info("Requesting market info with regional id: {} for all types and page {}", regionalId,
+                    currentPage);
+            response = api.getMarketsRegionIdOrdersWithHttpInfo("all", (int) regionalId, null, null, currentPage, null);
             logger.info("recieved a response: {}", response);
             orders.addAll(response.getData());
             pages = Integer.parseInt(response.getHeaders().get("x-pages").get(0));
             logger.info("Number of pages here: {}", pages);
             ++currentPage;
-        }
-        while (currentPage < pages);
-        
+        } while (currentPage <= pages);
+
         logger.info("Found {} orders", orders.size());
         return orders;
     }
 
-
     public static void exampleParsing(List<MarketOrdersResponse> orders) {
         logger.info("Found {} orders", orders.size());
         Predicate<MarketOrdersResponse> isBuyOrder = MarketOrdersResponse::getIsBuyOrder;
-        Pair<Double,Double> xx = orders.stream().parallel()
-            .filter(isBuyOrder.negate())
-            .reduce(Pair.of(Double.MIN_VALUE, Double.MAX_VALUE), 
-                (pair,order) -> 
-                Pair.of(
-                    pair.getFirst() < order.getPrice() ? order.getPrice() : pair.getFirst(),
-                    pair.getSecond() > order.getPrice() ? order.getPrice() : pair.getSecond())
-                ,
-                (pair1, pair2) ->
-                    Pair.of(
-                        pair1.getFirst() < pair2.getFirst() ? pair2.getFirst() : pair1.getFirst(),
-                        pair1.getSecond() > pair2.getSecond() ? pair2.getSecond() : pair1.getSecond())
-                );
-        logger.info("min: {}, max: {}",xx.getFirst(), xx.getSecond());
+        Pair<Double, Double> xx = orders.stream().parallel().filter(isBuyOrder.negate()).reduce(
+                Pair.of(Double.MIN_VALUE, Double.MAX_VALUE),
+                (pair, order) -> Pair.of(pair.getFirst() < order.getPrice() ? order.getPrice() : pair.getFirst(),
+                        pair.getSecond() > order.getPrice() ? order.getPrice() : pair.getSecond()),
+                (pair1, pair2) -> Pair.of(pair1.getFirst() < pair2.getFirst() ? pair2.getFirst() : pair1.getFirst(),
+                        pair1.getSecond() > pair2.getSecond() ? pair2.getSecond() : pair1.getSecond()));
+        logger.info("min: {}, max: {}", xx.getFirst(), xx.getSecond());
     }
-    
+
 }

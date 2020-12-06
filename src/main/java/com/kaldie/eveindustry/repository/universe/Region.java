@@ -31,7 +31,7 @@ public class Region {
     @JoinColumn(name = "id")
     private UniqueName name;
 
-    @OneToMany(mappedBy = "region")
+    @OneToMany(mappedBy = "region", fetch = FetchType.LAZY)
     private List<SolarSystem> solarSystems;
     
     @Transient

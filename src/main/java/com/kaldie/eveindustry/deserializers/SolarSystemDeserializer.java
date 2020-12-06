@@ -76,10 +76,11 @@ public class SolarSystemDeserializer extends EveDeserializer<SolarSystem> {
             gateParser.setCodec(jp.getCodec());
            
             try {
-                Stargate starget = gateParser.readValueAs(Stargate.class);
-                starget.setId(Long.parseLong(field.getKey()));
-                starget.setLocation(solarSystem);
-                stargates.add(starget);
+                Stargate stargate = gateParser.readValueAs(Stargate.class);
+                stargate.setId(Long.parseLong(field.getKey()));
+                stargate.setDestination(new SolarSystem(field.getValue().findValue("destination").asInt()));
+                stargate.setLocation(solarSystem);
+                stargates.add(stargate);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

@@ -147,14 +147,14 @@ public class ESDReader {
     }
 
     public void storeEsd() throws IOException {
-        logger.info("Storing Type IDs");
-        storeTypeIds();
-        logger.info("Storing Blueprints");
-        storeBlueprints();
         logger.info("Storing Names");
         storeNames();
+        logger.info("Storing Type IDs");
+        storeTypeIds();
         logger.info("Storing Regions");
         storeRegions();
+        logger.info("Storing Blueprints");
+        storeBlueprints();
     }
 
     private void loadTypeIds() throws IOException {

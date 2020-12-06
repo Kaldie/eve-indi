@@ -5,9 +5,10 @@ spring:
         username: sa
         password: magic11!
     jpa:
-        show-sql: false
+        show-sql: true
         hibernate:
-            format_sql: false
+            format_sql: true
+            jdbc.batch_size: 5
 
     flyway:
         url: jdbc:sqlserver://localhost:1434;database=master
@@ -15,3 +16,5 @@ spring:
         user: sa
         password: magic11!
         baseline-on-migrate: true
+
+

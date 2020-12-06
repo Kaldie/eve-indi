@@ -1,6 +1,7 @@
 package com.kaldie.eveindustry.repository.market;
 
 import com.kaldie.eveindustry.repository.type_id.TypeId;
+import com.kaldie.eveindustry.repository.universe.SolarSystem;
 
 import net.troja.eve.esi.model.MarketOrdersResponse;
 import net.troja.eve.esi.model.MarketOrdersResponse.RangeEnum;
@@ -17,19 +18,28 @@ public final class Adaptor {
     }
 
     public static org.joda.time.DateTime from(java.time.OffsetDateTime timeOffset) {
+        String timezone = timeOffset.getOffset().getId().equals("Z")? "Zulu" : timeOffset.getOffset().getId();
+
         return new org.joda.time.DateTime(timeOffset.toInstant().toEpochMilli(),
-                org.joda.time.DateTimeZone.forID(timeOffset.getOffset().getId()));
+                org.joda.time.DateTimeZone.forID(timezone));
     }
 
     public static MarketOrdersResponse from(MarketOrder marketOrder) {
         int typeId = marketOrder.getTypeId() != null ? marketOrder.getTypeId().getId().intValue() : null;
 
         MarketOrdersResponse response = new MarketOrdersResponse();
-        response.duration(marketOrder.getDuration()).isBuyOrder(marketOrder.getIsBuy())
-                .issued(Adaptor.from(marketOrder.getIssued())).locationId(marketOrder.getLocation())
-                .minVolume(marketOrder.getMinVolume()).orderId(marketOrder.getOrderId()).price(marketOrder.getPrice())
-                .range(RangeEnum.fromValue(marketOrder.getRange())).typeId(typeId)
-                .volumeRemain(marketOrder.getVolumeRemain()).volumeTotal(marketOrder.getVolumeTotal());
+        response
+            .duration(marketOrder.getDuration())
+            .isBuyOrder(marketOrder.getIsBuy())
+            .issued(Adaptor.from(marketOrder.getIssued()))
+            .locationId(marketOrder.getLocation())
+            .minVolume(marketOrder.getMinVolume())
+            .orderId(marketOrder.getOrderId())
+            .price(marketOrder.getPrice())
+            .range(RangeEnum.fromValue(marketOrder.getRange()))
+            .typeId(typeId)
+            .volumeRemain(marketOrder.getVolumeRemain())
+            .volumeTotal(marketOrder.getVolumeTotal());
         return response;
     }
 
@@ -47,6 +57,7 @@ public final class Adaptor {
         response.setTypeId(new TypeId(marketOrder.getTypeId()));
         response.setVolumeRemain(marketOrder.getVolumeRemain());
         response.setVolumeTotal(marketOrder.getVolumeTotal());
+        response.setSystemId(new SolarSystem(marketOrder.getSystemId()));
         return response;
     }
 

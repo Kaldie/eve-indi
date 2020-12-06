@@ -16,6 +16,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.kaldie.eveindustry.repository.market.MarketOrderRepository;
 import com.kaldie.eveindustry.repository.type_id.TypeIDRepository;
 import com.kaldie.eveindustry.repository.universe.RegionRepository;
 
@@ -34,7 +35,10 @@ public class MarketOppurtunitiesTest {
     @Mock
     TypeIDRepository typeIdRepository;
 
-    private MarketOppurtunities marketOppurtunities = new MarketOppurtunities(regionRepository, typeIdRepository);
+    @Mock
+    MarketOrderRepository marketOrderRepository;
+
+    private MarketOppurtunities marketOppurtunities = new MarketOppurtunities(regionRepository, typeIdRepository, marketOrderRepository);
     List<MarketOrdersResponse> buyOrders = Arrays.asList(
             new MarketOrdersResponse().typeId(10).isBuyOrder(true).locationId(11L).price(100.00),
             new MarketOrdersResponse().typeId(10).isBuyOrder(true).locationId(11L).price(150.00));

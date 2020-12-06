@@ -28,6 +28,14 @@ import lombok.Data;
 @JsonDeserialize(using = SolarSystemDeserializer.class)
 public class SolarSystem {
 
+
+    public SolarSystem() {
+    } 
+
+    public SolarSystem(int id) {
+        this.solarSystemID = Long.valueOf(id);
+    } 
+
     @Id
     @Column(name="id")
     private Long solarSystemID;
@@ -39,6 +47,8 @@ public class SolarSystem {
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
     @JsonIgnore // this property is read via the custom Deserializer 
     private List<Stargate> stargates;
+
+    private float security;
 
     @ManyToOne
     @JoinColumn(name = "region_id")

@@ -2,7 +2,7 @@ package com.kaldie.eveindustry.service.experiments;
 
 import org.springframework.stereotype.Component;
 
-@com.kaldie.eveindustry.eve_indi_annotations.Experiment
+@com.kaldie.eveindustry.annotations.Experiment
 @Component
 public abstract class Task {
 
