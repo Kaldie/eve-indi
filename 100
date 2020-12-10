@@ -1,0 +1,9 @@
+HTTP/1.1 400 
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Sun, 06 Dec 2020 21:35:40 GMT
+Connection: close
+

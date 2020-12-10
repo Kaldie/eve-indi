@@ -436,7 +436,6 @@ CREATE TABLE unique_name (
 	id bigint NOT NULL,
 	group_id int,
 	[name] varchar(255),
-	[version] smallint,
 	CONSTRAINT PK__unique_name PRIMARY KEY (id),
 	INDEX IX_unique_name NONCLUSTERED (id, name)
 )

@@ -3,21 +3,11 @@ package com.kaldie.eveindustry.deserializers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.deser.BeanDeserializerFactory;
-import com.fasterxml.jackson.databind.deser.ResolvableDeserializer;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.kaldie.eveindustry.repository.universe.Planet;
 import com.kaldie.eveindustry.repository.universe.SolarSystem;
 import com.kaldie.eveindustry.repository.universe.Stargate;
@@ -38,9 +28,6 @@ public class SolarSystemDeserializer extends EveDeserializer<SolarSystem> {
 
         serializePlanets(solarSystem, node, jp);
         serializeStargates(solarSystem, node, jp);
-        // JsonNode node = parser.getCodec().readTree(parser);
-           
-        
        
         return solarSystem;
     }
@@ -59,7 +46,6 @@ public class SolarSystemDeserializer extends EveDeserializer<SolarSystem> {
                 planet.setSolarSystem(solarSystem);
                 planets.add(planet);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         });
@@ -82,7 +68,6 @@ public class SolarSystemDeserializer extends EveDeserializer<SolarSystem> {
                 stargate.setLocation(solarSystem);
                 stargates.add(stargate);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         });

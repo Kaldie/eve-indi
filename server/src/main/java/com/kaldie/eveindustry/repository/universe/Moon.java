@@ -3,17 +3,13 @@ package com.kaldie.eveindustry.repository.universe;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -31,7 +27,7 @@ public class Moon {
     @Id
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "moon")
+    @OneToMany(mappedBy = "moon", fetch = FetchType.LAZY)
     @JsonIgnore
     List<NPCStation> npcStations;
 
@@ -39,8 +35,9 @@ public class Moon {
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     private TypeId typeID;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="planet_id")
+    @JsonIgnore
     Planet planet;   
 
     @OneToOne(fetch = FetchType.LAZY)

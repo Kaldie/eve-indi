@@ -3,14 +3,11 @@ package com.kaldie.eveindustry;
 import java.io.IOException;
 import java.util.Collections;
 
-import com.kaldie.eveindustry.client.zkillboard.KillboardWebSocketClient;
 import com.kaldie.eveindustry.repository.ESDReader;
-import com.kaldie.eveindustry.repository.universe.RegionRepository;
 import com.kaldie.eveindustry.service.task.TaskRunner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -45,7 +42,7 @@ public class EveIndustryApplication {
 	@EventListener(ApplicationReadyEvent.class)
 	public void doSomethingAfterStartup() throws IOException {
 
-		// reader.storeEsd();
+		reader.storeEsd();
 		
 		runner.runAll();
 
@@ -73,7 +70,7 @@ public class EveIndustryApplication {
 		CorsConfiguration config = new CorsConfiguration();  
 		config.setAllowCredentials(true); 
 		// *** URL below needs to match the Vue client URL and port ***
-		config.setAllowedOrigins(Collections.singletonList("http://localhost:8080")); 
+		config.setAllowedOrigins(Collections.singletonList("http://localhost:8081")); 
 		config.setAllowedMethods(Collections.singletonList("*"));  
 		config.setAllowedHeaders(Collections.singletonList("*"));  
 		source.registerCorsConfiguration("/**", config);  

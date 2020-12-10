@@ -143,7 +143,7 @@ public class ESDReader {
         }
 
         logger.debug("Save names to db.");
-        uniqueNamesRepository.saveAll(names);
+        uniqueNamesRepository.updateInsertDeleteFromBulk(names, UniqueName.class);
     }
 
     public void storeEsd() throws IOException {

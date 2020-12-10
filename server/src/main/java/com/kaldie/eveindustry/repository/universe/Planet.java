@@ -32,23 +32,24 @@ public class Planet {
     @Id
     private Long id;
 
-    @OneToMany(mappedBy = "planet", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Moon> moons;
-    
     private int celestialIndex;
-
+    
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     private TypeId typeID;
 
-    @ManyToOne
-    @JoinColumn(name="solar_system_id")
-    private SolarSystem solarSystem;
-
+    @OneToMany(mappedBy = "planet", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Moon> moons;
+    
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private UniqueName name;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="solar_system_id")
+    @JsonIgnore
+    private SolarSystem solarSystem;
 
     public Moon getMoon(Long id) {
         Moon thisMoon = null;

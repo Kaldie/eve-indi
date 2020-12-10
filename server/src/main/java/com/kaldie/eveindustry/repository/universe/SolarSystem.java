@@ -4,19 +4,16 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kaldie.eveindustry.deserializers.SolarSystemDeserializer;
 
@@ -40,23 +37,24 @@ public class SolarSystem {
     @Column(name="id")
     private Long solarSystemID;
     
-    @OneToMany(mappedBy = "solarSystem", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "solarSystem", fetch = FetchType.LAZY)
     @JsonIgnore // this property is read via the custom Deserializer 
     private List<Planet> planets;
 
-    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
     @JsonIgnore // this property is read via the custom Deserializer 
     private List<Stargate> stargates;
 
-    private float security;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id")
+    @JsonIgnore
     private Region region;
-
+    
     private Boolean border;
-
+    
     private Boolean hub;
+
+    private float security;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")

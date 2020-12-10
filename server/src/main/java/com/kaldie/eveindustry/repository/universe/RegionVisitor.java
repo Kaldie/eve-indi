@@ -13,6 +13,9 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import lombok.Data;
+
+@Data
 public class RegionVisitor extends SimpleFileVisitor<Path> {
 
     List<Region> regions = new ArrayList<>();
@@ -22,7 +25,7 @@ public class RegionVisitor extends SimpleFileVisitor<Path> {
     // each type of file.
     @Override
     public FileVisitResult visitFile(Path file,
-                                   BasicFileAttributes attr) throws IOException {
+                                     BasicFileAttributes attr) throws IOException {
         final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
         if (file.getFileName().toString().equals("region.staticdata")) {
@@ -37,15 +40,4 @@ public class RegionVisitor extends SimpleFileVisitor<Path> {
         }
         return CONTINUE;
     }
-
-    public List<Region> getRegions() {
-        return this.regions;
-    }
-
-    
-    public List<SolarSystem> getSolarSystems() {
-        return this.solarSystems;
-    }
-
-
 }

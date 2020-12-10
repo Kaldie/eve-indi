@@ -2,16 +2,12 @@ package com.kaldie.eveindustry.repository.universe;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -40,14 +36,13 @@ public class NPCStation {
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     private TypeId typeID;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "moon_id")
     private Moon moon;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="solar_system_id")
-    @PrimaryKeyJoinColumn()
     private SolarSystem solarSystem;
     
     @OneToOne(fetch = FetchType.LAZY)

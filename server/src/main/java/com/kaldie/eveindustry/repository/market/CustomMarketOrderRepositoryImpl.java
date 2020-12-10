@@ -2,8 +2,10 @@ package com.kaldie.eveindustry.repository.market;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -27,18 +29,17 @@ public class CustomMarketOrderRepositoryImpl implements CustomMarketOrderReposit
 
     private final EntityManager entityManager;
 
-    private List<MarketOrder> MarketOrdersFromSystems( List<Integer> systems) {
+    private List<MarketOrder> getAllMarketOrders( Set<Integer> systems) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<MarketOrder> criteriaQuery = criteriaBuilder.createQuery(MarketOrder.class);
         Root<MarketOrder> rootEntry = criteriaQuery.from(MarketOrder.class);
 
-        CriteriaQuery<MarketOrder> all = criteriaQuery.select(rootEntry);
+        criteriaQuery = criteriaQuery.select(rootEntry);
         In<Object> inCriteria = criteriaBuilder.in(rootEntry.get("systemId"));
         systems.forEach(inCriteria::value);
-        all = all.where(inCriteria);
+        criteriaQuery = criteriaQuery.where(inCriteria);
 
-        TypedQuery<MarketOrder> allQuery = entityManager.createQuery(all);
-        return allQuery.getResultList();
+        return  entityManager.createQuery(criteriaQuery).getResultList();
     }
 
     private void updateMarketOrderFromResponse(MarketOrder order, MarketOrdersResponse response) {
@@ -72,14 +73,14 @@ public class CustomMarketOrderRepositoryImpl implements CustomMarketOrderReposit
     @Transactional
     public void updateFromMarketOrderResponses(List<MarketOrdersResponse> responses) {
 
-
+        Set<Integer> systems = new HashSet<>();
         Map<Long, MarketOrdersResponse> marketOrderResponseMap = new HashMap<>();
-        List<Integer> systems = responses.stream().map(MarketOrdersResponse::getSystemId).collect(Collectors.toList());
-        responses.forEach(reponse -> 
-            marketOrderResponseMap.put(reponse.getOrderId(), reponse)
-        );
+        responses.forEach(reponse -> {
+            systems.add(reponse.getSystemId());
+            marketOrderResponseMap.put(reponse.getOrderId(), reponse);
+        });
         
-        List<MarketOrder> orders = MarketOrdersFromSystems(systems);
+        List<MarketOrder> orders = getAllMarketOrders(systems);
 
         orders.forEach(order -> {
             Long orderId = order.getOrderId();

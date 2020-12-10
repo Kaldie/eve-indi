@@ -11,8 +11,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kaldie.eveindustry.repository.type_id.TypeId;
 import com.kaldie.eveindustry.repository.universe.SolarSystem;
+import com.kaldie.eveindustry.serializers.MarketOrderSerializer;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -22,12 +24,17 @@ import org.slf4j.LoggerFactory;
 import lombok.Data;
 import net.troja.eve.esi.model.MarketOrdersResponse;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+
 @Entity
 @Table(name="market_order")
 @Data
+@JsonSerialize(using = MarketOrderSerializer.class)
 public class MarketOrder {
     
     @Transient
+    @JsonIgnore
     private Logger logger = LoggerFactory.getLogger(MarketOrder.class);
 
     @Id
