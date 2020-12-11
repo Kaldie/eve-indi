@@ -20,6 +20,9 @@ public class RegionVisitor extends SimpleFileVisitor<Path> {
 
     List<Region> regions = new ArrayList<>();
     List<SolarSystem> solarSystems = new ArrayList<>();
+    List<Planet> planets = new ArrayList<>();
+    List<Moon> moons = new ArrayList<>();
+    List<NPCStation> npcStations = new ArrayList<>();
 
     // Print information about
     // each type of file.
@@ -39,5 +42,19 @@ public class RegionVisitor extends SimpleFileVisitor<Path> {
             solarSystems.add(system);
         }
         return CONTINUE;
+    }
+
+    private void unpack() {
+        solarSystems.forEach(solarSystem -> {
+            solarSystem.getPlanets().forEach(planet -> {
+                planets.add(planet);
+                planet.getMoons().forEach(moon -> {
+                    moons.add(moon);
+                    moon.getNpcStations().forEach(station -> {
+                        npcStations.add(station);
+                    });
+                });     
+            });
+        });
     }
 }
