@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,12 +19,20 @@ import com.kaldie.eveindustry.repository.blueprint.BlueprintRepository;
 import com.kaldie.eveindustry.repository.type_id.TypeIDRepository;
 import com.kaldie.eveindustry.repository.type_id.TypeId;
 import com.kaldie.eveindustry.repository.type_id.type_materials.TypeMaterial;
+import com.kaldie.eveindustry.repository.universe.Moon;
+import com.kaldie.eveindustry.repository.universe.MoonRepository;
+import com.kaldie.eveindustry.repository.universe.NPCStation;
+import com.kaldie.eveindustry.repository.universe.NPCStationRepository;
 import com.kaldie.eveindustry.repository.universe.Planet;
+import com.kaldie.eveindustry.repository.universe.PlanetRepository;
 import com.kaldie.eveindustry.repository.universe.Region;
 import com.kaldie.eveindustry.repository.universe.RegionRepository;
 import com.kaldie.eveindustry.repository.universe.RegionVisitor;
+import com.kaldie.eveindustry.repository.universe.SimpleStargate;
 import com.kaldie.eveindustry.repository.universe.SolarSystem;
 import com.kaldie.eveindustry.repository.universe.SolarSystemRepository;
+import com.kaldie.eveindustry.repository.universe.Stargate;
+import com.kaldie.eveindustry.repository.universe.SimpleStargateRepository;
 import com.kaldie.eveindustry.repository.universe.UniqueName;
 import com.kaldie.eveindustry.repository.universe.UniqueNamesRepository;
 
@@ -33,13 +44,12 @@ import org.springframework.stereotype.Service;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-
 @Service
 @RequiredArgsConstructor
 @Data
 public class ESDReader {
     
-    private Collection<TypeId> types;
+    private List<TypeId> types;
     private Collection<Blueprint> blueprints;
     private Collection<TypeMaterial> typeMaterials;
     private List<Region> regions;
@@ -54,9 +64,17 @@ public class ESDReader {
 
     private final RegionRepository regionRepository;
 
-    private final SolarSystemRepository solarSystemRepository;
-
+    
     private final UniqueNamesRepository uniqueNamesRepository;
+    
+    private final RegionVisitor regionVisitor;
+    
+    private final SolarSystemRepository solarSystemRepository;
+    private final PlanetRepository planetRepository;
+    private final MoonRepository moonRepository;
+    private final NPCStationRepository npcStationRepository;
+    private final SimpleStargateRepository simpleStargateRepository;
+
 
     public void loadEsd() {
         try {
@@ -108,32 +126,40 @@ public class ESDReader {
             this.loadTypeIds();
         }
         logger.debug("Saving types in db.");
-        typeRepository.saveAll(types);
+        typeRepository.updateInsertDeleteFromBulk(types, TypeId.class);
     }
 
     private void storeRegions() throws IOException {
-        if (regions == null || solarSystems == null) {
-            logger.debug("loading regions from yml files.");
+        if (regionVisitor.getSolarSystems().isEmpty() || regionVisitor.getRegions().isEmpty() ) {
+            logger.info("loading regions from yml files.");
             this.loadRegions();
         }
-        logger.debug("Save regions to db.");
+        logger.info("Save regions to db.");
 
-        for (Region region : regions) {
-            try {
-                regionRepository.save(region);
-            } catch (DataIntegrityViolationException e) {
-                logger.error("Could not insert region with id: {}!", region.getRegionID());
-            }
-        }
+        regionRepository.updateInsertDeleteFromBulk(regionVisitor.getRegions(), Region.class);
 
-        for (SolarSystem system : solarSystems) {
-            try {
-                solarSystemRepository.save(system);
-            } catch (DataIntegrityViolationException e) {
-                logger.error("Could not insert system with id: {}!", system.getSolarSystemID());
-                logger.error("Planets with the following ids: {}", system.getPlanets().stream().map(Planet::getId).map(id -> Long.toString(id)).toArray());
+        logger.info("Save solarSystem to db.");
+        solarSystemRepository.updateInsertDeleteFromBulk(regionVisitor.getSolarSystems(), SolarSystem.class);
+        logger.info("Save stargate to db.");
+
+        Map<Long, Stargate> gates = new HashMap<Long, Stargate>();
+        regionVisitor.getStargates().forEach(gate -> gates.put(gate.getId(), gate));
+        gates.values().forEach(gate -> {
+            if (!gates.containsKey(gate.getDestination().getId())) {
+                logger.error("Fuck: {} {} ",gate.getId(), gate.getDestination().getId() );
             }
-        }
+        });
+
+        logger.info("Save stargates to db.");
+        simpleStargateRepository.updateInsertDeleteFromBulk(
+            regionVisitor.getStargates().stream().map(SimpleStargate::from).collect(Collectors.toList()), 
+            SimpleStargate.class);
+        logger.info("Save planet to db.");
+        planetRepository.updateInsertDeleteFromBulk(regionVisitor.getPlanets(), Planet.class);
+        logger.info("Save moon to db.");
+        moonRepository.updateInsertDeleteFromBulk(regionVisitor.getMoons(), Moon.class);
+        logger.info("Save npcStation to db.");
+        npcStationRepository.updateInsertDeleteFromBulk(regionVisitor.getNpcStations(), NPCStation.class);
     }
 
     private void storeNames() throws IOException {
@@ -166,7 +192,7 @@ public class ESDReader {
         for (Map.Entry<Long, TypeId> entry : typeMap.entrySet()) {
             entry.getValue().setId(entry.getKey());
         }
-        types = typeMap.values();
+        types = new ArrayList<>(typeMap.values());
     }
 
     private void loadBlueprints() throws IOException {
@@ -188,10 +214,14 @@ public class ESDReader {
     }
 
     private void loadRegions() throws IOException {
-        RegionVisitor regionVisitor = new RegionVisitor();
-        Files.walkFileTree(Paths.get("resources/sde/fsd/universe"), regionVisitor);
-        regions = regionVisitor.getRegions();
-        solarSystems = regionVisitor.getSolarSystems();
+        logger.info("Reset");
+        regionVisitor.reset();
+
+        logger.info("walk");
+        Files.walkFileTree(Paths.get("resources/sde/fsd/universe/eve"), regionVisitor);
+        logger.info("unpack");
+        regionVisitor.unpack();
+        logger.info("done");
     }
 
     private void loadNames() throws IOException {

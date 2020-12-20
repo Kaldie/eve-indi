@@ -2,17 +2,13 @@ package com.kaldie.eveindustry.repository;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.kaldie.eveindustry.EveIndustryApplicationTestConfiguration;
-import com.kaldie.eveindustry.repository.type_id.TanslatedString;
 import com.kaldie.eveindustry.repository.type_id.TypeIDRepository;
 import com.kaldie.eveindustry.repository.type_id.TypeId;
 

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.kaldie.eveindustry.repository.universe.Moon;
 import com.kaldie.eveindustry.repository.universe.Planet;
+import com.kaldie.eveindustry.repository.universe.UniqueName;
 
 public class PlanetDeserializer extends EveDeserializer<Planet> {
 
@@ -25,6 +26,7 @@ public class PlanetDeserializer extends EveDeserializer<Planet> {
 
         JsonNode node = jp.getCodec().readTree(jp);
         Planet planet = defaultDeserialisation(jp, ctxt, node);
+
         
         List<Moon> moons = new ArrayList<>();
         node.with("moons").fields().forEachRemaining(field -> {
@@ -35,6 +37,7 @@ public class PlanetDeserializer extends EveDeserializer<Planet> {
             try {
                 moon = moonParser.readValueAs(Moon.class);
                 moon.setId(Long.parseLong(field.getKey()));
+                moon.setName(new UniqueName(moon.getId()));
                 moon.setPlanet(planet);
                 moons.add(moon);
       

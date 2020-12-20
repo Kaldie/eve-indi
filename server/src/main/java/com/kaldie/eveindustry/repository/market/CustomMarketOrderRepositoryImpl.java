@@ -1,5 +1,6 @@
 package com.kaldie.eveindustry.repository.market;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,11 +17,15 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.transaction.Transactional;
 
+import com.kaldie.eveindustry.repository.type_id.TypeIDRepository;
+import com.kaldie.eveindustry.repository.type_id.TypeId;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import net.troja.eve.esi.model.MarketOrdersResponse;
+
 
 @Repository
 public class CustomMarketOrderRepositoryImpl implements CustomMarketOrderRepository {
@@ -42,6 +47,15 @@ public class CustomMarketOrderRepositoryImpl implements CustomMarketOrderReposit
         return  entityManager.createQuery(criteriaQuery).getResultList();
     }
 
+    private List<TypeId> getAllTypes() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<TypeId> criteriaQuery = criteriaBuilder.createQuery(TypeId.class);
+        Root<TypeId> rootEntry = criteriaQuery.from(TypeId.class);
+
+        criteriaQuery = criteriaQuery.select(rootEntry);
+        return  entityManager.createQuery(criteriaQuery).getResultList();
+    }
+
     private void updateMarketOrderFromResponse(MarketOrder order, MarketOrdersResponse response) {
         if (!order.almostEqualToResponse(response)) {
             logger.debug("Reponse is not equal!");
@@ -56,9 +70,25 @@ public class CustomMarketOrderRepositoryImpl implements CustomMarketOrderReposit
         }
     }
 
-    private void insertMarketOrderFromResponse(Collection<MarketOrdersResponse> marketOrdersResponses) {
-        marketOrdersResponses.forEach(marketOrdersResponse -> 
-            entityManager.persist(Adaptor.from(marketOrdersResponse)));
+    private void insertMarketOrderFromResponse(
+        Collection<MarketOrdersResponse> marketOrdersResponses,
+        List<Long> types) {
+       
+        marketOrdersResponses.forEach(marketOrdersResponse -> {
+            try {
+                if (types.contains(Long.valueOf(marketOrdersResponse.getTypeId()))) {
+                    entityManager.persist(Adaptor.from(marketOrdersResponse));
+                }
+            } catch (Exception e) {
+                logger.error(
+                    "DataIntegrityViolationException on with a {} with id: {}, {}\n{}", 
+                    marketOrdersResponse.getClass().getName(), 
+                    marketOrdersResponse.getOrderId(), 
+                    e, 
+                    marketOrdersResponse);
+            }
+        });
+
     }
 
     private void deleteOrderFromResponses(MarketOrder order) {
@@ -92,7 +122,9 @@ public class CustomMarketOrderRepositoryImpl implements CustomMarketOrderReposit
             }
         });
 
-        insertMarketOrderFromResponse(marketOrderResponseMap.values());
+        List<Long> types = new ArrayList<>();
+        getAllTypes().forEach(type -> types.add(type.getId()));
+        insertMarketOrderFromResponse(marketOrderResponseMap.values(), types);
     }
 
 

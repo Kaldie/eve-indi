@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.kaldie.eveindustry.repository.universe.Moon;
 import com.kaldie.eveindustry.repository.universe.NPCStation;
+import com.kaldie.eveindustry.repository.universe.UniqueName;
 
 public class MoonDeserializer extends EveDeserializer<Moon> {
 
@@ -34,6 +35,7 @@ public class MoonDeserializer extends EveDeserializer<Moon> {
             try {
                 station = stationParser.readValueAs(NPCStation.class);
                 station.setId(Long.parseLong(field.getKey()));
+                station.setName(new UniqueName(station.getId()));
                 station.setMoon(moon);
                 stations.add(station);
       

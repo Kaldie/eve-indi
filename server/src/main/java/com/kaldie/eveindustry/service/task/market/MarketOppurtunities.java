@@ -42,21 +42,22 @@ public class MarketOppurtunities extends Task {
     public void run() {
 
         List<Region> regions = Arrays.asList(
-                regionRepository.getRegionByName("The Forge"),
-                regionRepository.getRegionByName("Domain"));
+            regionRepository.getRegionByName("Domain"),
+                regionRepository.getRegionByName("The Forge"));
 
                 
         regions.forEach(region -> {
-                    
+            List<MarketOrdersResponse> orders = new ArrayList<>();
             logger.info("Requestion market orders from {} ", region.getName().getItemName());
             try {
-                List<MarketOrdersResponse> orders = MarketOrders.getRegionalItemOrders(region.getRegionID());
-                marketOrderRepository.updateFromMarketOrderResponses(orders);
+                orders.addAll(MarketOrders.getRegionalItemOrders(region.getRegionID()));
             } catch ( Exception e) {
                 logger.warn("Could not get all orders from {}!", region.getName());
                 logger.error(e.toString());
-                logger.error("{}", e.getStackTrace());
+                logger.error("{}", e);
             }
+            marketOrderRepository.updateFromMarketOrderResponses(orders);
+            orders.clear();
         });
 
     }

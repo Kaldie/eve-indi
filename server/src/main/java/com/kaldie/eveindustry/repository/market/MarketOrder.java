@@ -53,33 +53,26 @@ public class MarketOrder {
     private DateTime issued;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "system_id", referencedColumnName = "id")
+    @JoinColumn(name = "system_id")
     private SolarSystem systemId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "type_id", referencedColumnName = "id")
+    @JoinColumn(name = "type_id")
     private TypeId typeId;
 
     public boolean almostEqualToResponse(MarketOrdersResponse response) {
             boolean isEqual = true;
             isEqual = response.getOrderId() == orderId;
-            logger.debug("{}",isEqual);
             isEqual = isEqual && response.getDuration().equals(duration);
-            logger.debug("{}",isEqual);
             isEqual = isEqual && response.getIsBuyOrder().equals(isBuy);
-            logger.debug("{}",isEqual);
             isEqual = isEqual && response.getLocationId().equals(location);
-            logger.debug("{}",isEqual);
             isEqual = isEqual && response.getMinVolume().equals(minVolume);
-            logger.debug("{}",isEqual);
             isEqual = isEqual && response.getPrice().equals(price);
-            logger.debug("{}",isEqual);
             isEqual = isEqual && response.getRangeString().equals(range);
-            logger.debug("{}",isEqual);
             isEqual = isEqual && response.getVolumeRemain().equals(volumeRemain);
-            logger.debug("{}",isEqual);
             isEqual = isEqual && response.getVolumeTotal().equals(volumeTotal);
-            logger.debug("{}",isEqual);
+            isEqual = isEqual && response.getTypeId().equals(typeId.getId().intValue());
+            isEqual = isEqual && response.getSystemId().equals(systemId.getSolarSystemID().intValue());
             Long responseEpoch = response.getIssued().toInstant().toEpochMilli();
             Long orderEpoch = issued.getMillis();
             isEqual = isEqual && responseEpoch.equals(orderEpoch);

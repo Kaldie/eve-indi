@@ -1,5 +1,6 @@
 package com.kaldie.eveindustry.repository.universe;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -19,8 +20,8 @@ public class Stargate {
     public Stargate() {
     } 
 
-    public Stargate(int id_int) {
-        this.id = Long.valueOf(id_int);
+    public Stargate(Long id) {
+        this.id = id;
     } 
     
     @Id
@@ -29,10 +30,29 @@ public class Stargate {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "destination")
     @JsonIgnore
-    private SolarSystem destination;
+    private Stargate destination;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location")
     @JsonIgnore
     private SolarSystem location;
+
+    @Override
+    public boolean equals(Object other) {
+        boolean isEquals = true;
+        if( other != null && other.getClass() == SolarSystem.class) {
+            Stargate otherStargate = (Stargate) other;
+            isEquals = otherStargate.id.equals(this.id);
+            isEquals = isEquals && this.destination.getId().equals(otherStargate.destination.getId());
+            isEquals = isEquals && this.location.getSolarSystemID().equals(otherStargate.location.getSolarSystemID());
+        } else {
+            isEquals = false;
+        }
+        return isEquals;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
+    }
 }

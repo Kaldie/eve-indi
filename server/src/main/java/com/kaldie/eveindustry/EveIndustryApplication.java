@@ -3,6 +3,7 @@ package com.kaldie.eveindustry;
 import java.io.IOException;
 import java.util.Collections;
 
+import com.kaldie.eveindustry.repository.BulkInsertUpdateRepository;
 import com.kaldie.eveindustry.repository.ESDReader;
 import com.kaldie.eveindustry.service.task.TaskRunner;
 
@@ -16,6 +17,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.Ordered;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -42,7 +44,7 @@ public class EveIndustryApplication {
 	@EventListener(ApplicationReadyEvent.class)
 	public void doSomethingAfterStartup() throws IOException {
 
-		reader.storeEsd();
+		// reader.storeEsd();
 		
 		runner.runAll();
 

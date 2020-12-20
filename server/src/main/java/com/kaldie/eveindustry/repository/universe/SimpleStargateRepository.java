@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MoonRepository extends BulkInsertUpdateRepository<Moon>, JpaRepository<Moon, Long> {
+public interface SimpleStargateRepository extends JpaRepository<Stargate, Long>, BulkInsertUpdateRepository<SimpleStargate> {
     
 }

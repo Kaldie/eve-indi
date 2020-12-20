@@ -1,6 +1,8 @@
 package com.kaldie.eveindustry.repository.universe;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,9 +24,9 @@ public class Region {
 
     @Id
     @Column(name = "id")
-    private long regionID;
+    private Long regionID;
     
-    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id")
     private UniqueName name;
 
@@ -33,5 +35,22 @@ public class Region {
     
     @Transient
     private String directoryName;
+
+    @Override
+    public boolean equals(Object other) {
+        boolean isEquals = true;
+        if( other != null && other.getClass() == Region.class) {
+            Region otherRegion = (Region) other;
+            isEquals = otherRegion.regionID.equals(this.regionID);           
+        } else {
+            isEquals = false;
+        }
+        return isEquals;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(regionID);
+    }
     
 }

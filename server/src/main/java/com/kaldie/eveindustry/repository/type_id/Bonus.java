@@ -15,7 +15,7 @@ public class Bonus {
     private float bonusAmount;
     
     @OneToOne(cascade = CascadeType.ALL)
-    private TanslatedString bonusText;
+    private TranslatedString bonusText;
     
     private int importance;
     private boolean isPositive;

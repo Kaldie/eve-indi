@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.kaldie.eveindustry.repository.universe.Planet;
 import com.kaldie.eveindustry.repository.universe.SolarSystem;
 import com.kaldie.eveindustry.repository.universe.Stargate;
+import com.kaldie.eveindustry.repository.universe.UniqueName;
 
 public class SolarSystemDeserializer extends EveDeserializer<SolarSystem> {
     private static final long serialVersionUID = 1L;
@@ -25,6 +26,7 @@ public class SolarSystemDeserializer extends EveDeserializer<SolarSystem> {
         
         JsonNode node = jp.getCodec().readTree(jp);
         SolarSystem solarSystem = defaultDeserialisation(jp, ctxt, node);
+        solarSystem.setName(new UniqueName(solarSystem.getSolarSystemID()));
 
         serializePlanets(solarSystem, node, jp);
         serializeStargates(solarSystem, node, jp);
@@ -43,6 +45,7 @@ public class SolarSystemDeserializer extends EveDeserializer<SolarSystem> {
             try {
                 Planet planet = planetParser.readValueAs(Planet.class);
                 planet.setId(Long.parseLong(field.getKey()));
+                planet.setName(new UniqueName(planet.getId()));
                 planet.setSolarSystem(solarSystem);
                 planets.add(planet);
             } catch (IOException e) {
@@ -64,7 +67,7 @@ public class SolarSystemDeserializer extends EveDeserializer<SolarSystem> {
             try {
                 Stargate stargate = gateParser.readValueAs(Stargate.class);
                 stargate.setId(Long.parseLong(field.getKey()));
-                stargate.setDestination(new SolarSystem(field.getValue().findValue("destination").asInt()));
+                stargate.setDestination(new Stargate(field.getValue().findValue("destination").asLong()));
                 stargate.setLocation(solarSystem);
                 stargates.add(stargate);
             } catch (IOException e) {

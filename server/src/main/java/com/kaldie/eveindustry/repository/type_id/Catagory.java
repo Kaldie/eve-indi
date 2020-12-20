@@ -18,7 +18,7 @@ public class Catagory {
     private long id;
     
     @OneToOne(cascade = CascadeType.ALL)
-    private TanslatedString name;
+    private TranslatedString name;
     
     private boolean published;
 }

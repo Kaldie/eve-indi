@@ -17,7 +17,7 @@ import lombok.Data;
 @Entity
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TanslatedString implements Serializable {
+public class TranslatedString implements Serializable {
     
     private static final long serialVersionUID = 1l;
     

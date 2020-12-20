@@ -9,6 +9,13 @@ import lombok.Data;
 @Data
 @Entity
 public class UniqueName {
+    
+    public UniqueName() {}
+
+    public UniqueName(Long id) {
+        this.itemID = id;
+    }
+
     @Id
     @Column(name = "id")
     private Long itemID;

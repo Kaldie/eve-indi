@@ -1,6 +1,5 @@
 package com.kaldie.eveindustry.repository.universe;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -45,8 +44,33 @@ public class NPCStation {
     @JoinColumn(name="solar_system_id")
     private SolarSystem solarSystem;
     
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id")
     private UniqueName name;
+
+    @Override
+    public boolean equals(Object other) {
+        boolean isEquals = true;
+        if( other != null && other.getClass() == NPCStation.class) {
+            NPCStation otherStation = (NPCStation) other;
+            isEquals = otherStation.id == this.id;
+            isEquals = isEquals && this.graphicID == otherStation.getGraphicID();
+            isEquals = isEquals && this.isConquerable == otherStation.getIsConquerable();
+
+            isEquals = isEquals && this.ownerID == otherStation.getOwnerID();
+            isEquals = isEquals && this.reprocessingEfficiency == otherStation.getReprocessingEfficiency();
+            isEquals = isEquals && this.typeID.getId() == otherStation.getTypeID().getId();
+            isEquals = isEquals && this.moon.getId() == otherStation.getMoon().getId();
+            isEquals = isEquals && this.name.getItemID().equals(otherStation.getName().getItemID());
+        } else {
+            isEquals = false;
+        }
+        return isEquals;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
+    }
 
 }

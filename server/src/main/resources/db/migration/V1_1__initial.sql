@@ -49,13 +49,13 @@ CREATE TABLE skill (
 ) GO
 
 
--- tanslated_string definition
+-- translated_string definition
 
 -- Drop table
 
--- DROP TABLE tanslated_string GO
+-- DROP TABLE translated_string GO
 
-CREATE TABLE tanslated_string (
+CREATE TABLE translated_string (
 	id bigint IDENTITY(1,1) NOT NULL,
 	de varchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	en varchar(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
@@ -129,7 +129,7 @@ CREATE TABLE bonus (
 	is_positive bit NOT NULL,
 	bonus_text_id bigint NULL,
 	CONSTRAINT PK__bonus PRIMARY KEY (unitid),
-	CONSTRAINT FKke5tls94mrc5wm4yfwbwewy0a FOREIGN KEY (bonus_text_id) REFERENCES tanslated_string(id)
+	CONSTRAINT FKke5tls94mrc5wm4yfwbwewy0a FOREIGN KEY (bonus_text_id) REFERENCES translated_string(id)
 ) GO
 
 
@@ -144,7 +144,7 @@ CREATE TABLE catagory (
 	published bit NOT NULL,
 	name_id bigint NULL,
 	CONSTRAINT PK__catagory PRIMARY KEY (id),
-	CONSTRAINT FKqwtvmla6ip6a19kwgvq5dcbr6 FOREIGN KEY (name_id) REFERENCES tanslated_string(id)
+	CONSTRAINT FKqwtvmla6ip6a19kwgvq5dcbr6 FOREIGN KEY (name_id) REFERENCES translated_string(id)
 ) GO
 
 
@@ -222,32 +222,32 @@ CREATE TABLE masteries_zero (
 CREATE TABLE type_id (
 	id bigint NOT NULL,
 	base_price bigint NULL,
-	capacity float NOT NULL,
-	factionid bigint NOT NULL,
-	graphicid bigint NOT NULL,
-	groupid bigint NOT NULL,
-	iconid bigint NOT NULL,
-	market_groupid bigint NOT NULL,
-	mass float NOT NULL,
-	meta_groupid bigint NOT NULL,
-	portion_size int NOT NULL,
+	capacity float NULL,
+	factionid bigint NULL,
+	graphicid bigint NULL,
+	groupid bigint NULL,
+	iconid bigint NULL,
+	market_groupid bigint NULL,
+	mass float NULL,
+	meta_groupid bigint NULL,
+	portion_size int NULL,
 	published bit NOT NULL,
-	raceid bigint NOT NULL,
-	radius float NOT NULL,
+	raceid bigint NULL,
+	radius float NULL,
 	sof_faction_name varchar(255) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-	sof_material_setid bigint NOT NULL,
-	soundid bigint NOT NULL,
-	variation_parent_typeid bigint NOT NULL,
-	volume float NOT NULL,
+	sof_material_setid bigint NULL,
+	soundid bigint NULL,
+	variation_parent_typeid bigint NULL,
+	volume float NULL,
 	description_id bigint NULL,
 	masteries_id bigint NULL,
 	name_id bigint NULL,
 	traits_id bigint NULL,
 	CONSTRAINT PK__type_id__3213E83F8E000C3E PRIMARY KEY (id),
-	CONSTRAINT FK8mxy3qihvbq9intfa2m06t36f FOREIGN KEY (name_id) REFERENCES tanslated_string(id),
+	CONSTRAINT FK8mxy3qihvbq9intfa2m06t36f FOREIGN KEY (name_id) REFERENCES translated_string(id),
 	CONSTRAINT FKbdyk9l2tnko39c861stqax7fj FOREIGN KEY (traits_id) REFERENCES traits(id),
 	CONSTRAINT FKegl80gkiw1jqyxp89qh2jsp64 FOREIGN KEY (masteries_id) REFERENCES masteries(id),
-	CONSTRAINT FKocdy9p84isucoaceeqykmdh3 FOREIGN KEY (description_id) REFERENCES tanslated_string(id)
+	CONSTRAINT FKocdy9p84isucoaceeqykmdh3 FOREIGN KEY (description_id) REFERENCES translated_string(id)
 ) GO
 
 
@@ -528,7 +528,7 @@ CREATE TABLE market_order (
 	[location] BIGINT,
 	system_id BIGINT,
 	CONSTRAINT PK__market_order PRIMARY KEY (id),
-	CONSTRAINT IX_market_order UNIQUE (system_id)
+	CONSTRAINT FK_MO_solar_system FOREIGN KEY (system_id) REFERENCES solar_system(id),
 ) GO
 
 CREATE TABLE fulfilled_market_order (
@@ -581,8 +581,8 @@ join activity_required_materials arm on fa.activityID = arm.activity_id
 join blueprint_materials bm2 on arm.required_materials_id = bm2.id
 join type_id ti_required on ti_required.id = bm2.type_id
 join type_id ti_wanted on ti_wanted.id = fa.type_id
-join tanslated_string ts_required on ts_required.id = ti_required.name_id
-join tanslated_string ts_wanted on ts_wanted.id = ti_wanted.name_id;
+join translated_string ts_required on ts_required.id = ti_required.name_id
+join translated_string ts_wanted on ts_wanted.id = ti_wanted.name_id;
 GO
 
 create or alter view destroyed_content_per_day as

@@ -1,19 +1,16 @@
 package com.kaldie.eveindustry.repository.universe;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -42,7 +39,7 @@ public class Planet {
     @JsonIgnore
     private List<Moon> moons;
     
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id")
     private UniqueName name;
     
@@ -57,6 +54,28 @@ public class Planet {
             if (moon.getId().equals(id)) thisMoon = moon;
         }
         return thisMoon;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        boolean isEquals = true;
+        if( other != null && other.getClass() == Planet.class) {
+            Planet otherPlanet = (Planet) other;
+            isEquals = otherPlanet.id == this.id;
+            isEquals = isEquals && this.celestialIndex == otherPlanet.celestialIndex;
+            isEquals = isEquals && this.typeID.getId() == otherPlanet.typeID.getId();
+
+            isEquals = isEquals && this.name.getItemID() == otherPlanet.name.getItemID();
+            isEquals = isEquals && this.solarSystem.getSolarSystemID() == otherPlanet.solarSystem.getSolarSystemID();
+        } else {
+            isEquals = false;
+        }
+        return isEquals;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
     }
 
 }
