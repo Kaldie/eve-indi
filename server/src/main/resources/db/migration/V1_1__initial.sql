@@ -561,6 +561,7 @@ select
 	deleted.[location]
 FROM deleted
 left join inserted on deleted.id = inserted.id
+WHERE deleted.duration != 365
 END
 GO
 
@@ -596,4 +597,37 @@ group by
     type_id
 GO
 
+CREATE TYPE LongTableType as TABLE(ID BIGINT);
+GO
 
+CREATE OR ALTER FUNCTION find_margin(@input_systems LongTableType readonly)
+RETURNS @output TABLE(name varchar(255), sell_price float, buy_price float, margin float)
+AS BEGIN
+	insert into @output (name, sell_price, buy_price, margin) 
+		(select ts.en as name, sell_price , buy_price, sell_price / buy_price as margin
+		from (
+			select type_id,
+				max(CASE WHEN is_buy=1 THEN buy_price END) as buy_price,
+				min(CASE WHEN is_buy=0 THEN sell_price END) as sell_price
+			from (
+				select type_id, is_buy, max(price) buy_price, min(price) sell_price
+				from market_order mo
+				join @input_systems as i_s on i_s.ID = mo.system_id 
+				group by type_id, is_buy) ordered_orders
+			group by type_id) as lala
+		join type_id ti on ti.id = lala.type_id
+		join translated_string ts on ti.name_id = ts.id)
+
+	RETURN;
+END 
+GO
+
+
+
+-- declare @@tmp LongTableType
+-- insert into @@tmp(ID)
+-- select ss.id
+-- 		from solar_system ss 
+-- 		join unique_name un on ss.id = un.id 
+-- 		where un.name in ('Jita', 'Perimeter');
+-- select * from find_margin(@@tmp);
