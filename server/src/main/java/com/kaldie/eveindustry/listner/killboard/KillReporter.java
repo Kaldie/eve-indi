@@ -9,10 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import lombok.Data;
+
 @Component
+@Data
 public class KillReporter implements ApplicationListener<KillEvent> {
 
-    TypeIDRepository typeIDRepository;
+    private final TypeIDRepository typeIDRepository;
 
     private Logger logger = LoggerFactory.getLogger(KillReporter.class);
 
@@ -21,6 +24,7 @@ public class KillReporter implements ApplicationListener<KillEvent> {
         Message message = event.getMessage();
         logger.info("There is a kill to report");
         logger.info("Reported at: {}",message.getKillmailTime());
+        logger.info("victem ship type: {}", message.getVictim().getShip_type_id().getId());
         typeIDRepository.findLoadedTypeId(message.getVictim().getShip_type_id().getId()).ifPresentOrElse(
             ship -> logger.info("Victims ship was a {}",ship.getName().getEn()),
             () -> logger.info("Victims ship is unknown")

@@ -3,6 +3,8 @@ package com.kaldie.eveindustry;
 import java.io.IOException;
 import java.util.Collections;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.kaldie.eveindustry.client.zkillboard.KillboardWebSocketClient;
 import com.kaldie.eveindustry.repository.BulkInsertUpdateRepository;
 import com.kaldie.eveindustry.repository.ESDReader;
 import com.kaldie.eveindustry.service.task.TaskRunner;
@@ -15,6 +17,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.Ordered;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -31,7 +34,7 @@ public class EveIndustryApplication {
 
 	Logger logger = LoggerFactory.getLogger(EveIndustryApplication.class);
 
-	// private final KillboardWebSocketClient killboardWebSocketClient;
+	private final KillboardWebSocketClient killboardWebSocketClient;
 
 	// private final RegionRepository regionRepository;
 
@@ -48,16 +51,11 @@ public class EveIndustryApplication {
 		
 		runner.runAll();
 
-		// try {
-		// 	// MarketOrders.getRegionalItemOrders(34L, 10000002L);
-		// } catch (ApiException e) {
-		// 	e.printStackTrace();
-		// }
-		// // try {
-		// 	killboardWebSocketClient.startListnening();
-		// } catch (JsonProcessingException | InterruptedException e) {
-		// 	e.printStackTrace();
-		// }
+		try {
+			killboardWebSocketClient.startListnening();
+		} catch (JsonProcessingException | InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 

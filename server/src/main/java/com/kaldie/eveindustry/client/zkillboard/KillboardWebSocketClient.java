@@ -37,9 +37,8 @@ public class KillboardWebSocketClient extends WebSocketClient {
 	public KillboardWebSocketClient(KillboardWebSocketPublisher publisher) throws URISyntaxException {
 		super(new URI(KillboardWebSocketClient.url));
 		this.publisher = publisher;
+		this.setConnectionLostTimeout(0);
 	}
-
-	
 
 	public void startListnening() throws InterruptedException, JsonProcessingException {
 		this.connectBlocking();

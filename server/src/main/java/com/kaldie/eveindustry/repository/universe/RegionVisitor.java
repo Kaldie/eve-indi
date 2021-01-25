@@ -82,18 +82,6 @@ public class RegionVisitor extends SimpleFileVisitor<Path> {
                     });     
                 });
             });
-
-            Map<Long, Stargate> mappedGates = new HashMap<>();
-            stargates.forEach(gate -> mappedGates.put(gate.getId(), gate));
-
-            stargates.forEach(gate -> {
-                Long destinationKey = gate.getDestination().getId();
-                if (mappedGates.containsKey(destinationKey)) {
-                    gate.setDestination(mappedGates.get(destinationKey));
-                } else {
-                    logger.error("Could not find the destination stagate with id: {}",destinationKey );
-                }
-            });
         }
     }
 }

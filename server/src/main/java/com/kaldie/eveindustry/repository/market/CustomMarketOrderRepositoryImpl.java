@@ -7,21 +7,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.transaction.Transactional;
 
-import com.kaldie.eveindustry.repository.type_id.TypeIDRepository;
 import com.kaldie.eveindustry.repository.type_id.TypeId;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import net.troja.eve.esi.model.MarketOrdersResponse;
@@ -127,6 +126,12 @@ public class CustomMarketOrderRepositoryImpl implements CustomMarketOrderReposit
         insertMarketOrderFromResponse(marketOrderResponseMap.values(), types);
     }
 
+    @Cacheable("findMarketAround")
+    public List<MarketItemState>  findMarketAround(String systemName, Integer range) {
+        return entityManager.createNamedQuery("MarketItemState.findOrderVolumes")
+            .setParameter("system_name", systemName)
+            .setParameter("range", range).getResultList();
+    }
 
 
     

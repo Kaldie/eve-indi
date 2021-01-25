@@ -67,7 +67,7 @@ public class SimpleStargate {
         }
 
         if (stargate.getDestination() != null) {
-            simpleStargate.destination = stargate.getLocation().getSolarSystemID();
+            simpleStargate.destination = stargate.getDestination().getId();
         }
 
         return simpleStargate;

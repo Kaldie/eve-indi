@@ -43,7 +43,7 @@ public class MarketOppurtunities extends Task {
 
         List<Region> regions = Arrays.asList(
             regionRepository.getRegionByName("Domain"),
-                regionRepository.getRegionByName("The Forge"));
+            regionRepository.getRegionByName("The Forge"));
 
                 
         regions.forEach(region -> {
@@ -56,7 +56,9 @@ public class MarketOppurtunities extends Task {
                 logger.error(e.toString());
                 logger.error("{}", e);
             }
+            logger.info("Retrieved market orders from {}.", region.getName().getItemName());
             marketOrderRepository.updateFromMarketOrderResponses(orders);
+            logger.info("Updated orders from {}.", region.getName().getItemName());
             orders.clear();
         });
 

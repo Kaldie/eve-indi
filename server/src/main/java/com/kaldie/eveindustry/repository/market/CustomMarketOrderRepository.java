@@ -8,4 +8,5 @@ public interface CustomMarketOrderRepository {
 
     public void updateFromMarketOrderResponses(List<MarketOrdersResponse> responses);
     
+    public List<MarketItemState> findMarketAround(String systemName, Integer range);
 }
