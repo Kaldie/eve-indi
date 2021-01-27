@@ -629,7 +629,7 @@ AS BEGIN
 END 
 GO
 
-CREATE OR ALTER FUNCTION find_order_volumes(@input_systems LongTableType readonly)
+CREATE OR ALTER FUNCTION find_fufilled_order_volumes(@input_systems LongTableType readonly)
 RETURNS @output TABLE(type_id BIGINT, total_isk FLOAT, total_isk_bought FLOAT, 
 				      total_isk_sold FLOAT, total_buy_order int, 
 				 	  total_sell_order int, avg_buy FLOAT, avg_sell FLOAT)
@@ -656,7 +656,7 @@ AS BEGIN
 END 
 GO
 
-CREATE OR ALTER FUNCTION find_market_around(@input_system VARCHAR(255), @range int) 
+CREATE OR ALTER FUNCTION get_daytrade_info(@input_system VARCHAR(255), @range int) 
 RETURNS @output TABLE(type_id BIGINT, buy_price FLOAT, sell_price FLOAT,  margin FLOAT,
 					  total_isk FLOAT, total_isk_bought FLOAT, 
 				      total_isk_sold FLOAT, total_buy_order int, 
@@ -684,8 +684,8 @@ AS BEGIN
 		   total_isk, total_isk_bought, 
 		   total_isk_sold, total_buy_order, 
 		   total_sell_order, avg_buy, avg_sell
-    from find_margin(@solar_systems) as fm, find_order_volumes(@solar_systems) as fov 
-    where fm.type_id = fov.type_id;
+    from find_margin(@solar_systems) as fm
+	join find_fufilled_order_volumes(@solar_systems) as fov on fm.type_id = fov.type_id
 	
 	return
 END

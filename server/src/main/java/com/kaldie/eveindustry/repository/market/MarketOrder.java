@@ -55,7 +55,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
     " select type_id, buy_price, sell_price, margin, total_isk, total_isk_bought, " +
     " total_isk_sold , total_buy_order, " +
     " total_sell_order , avg_buy , avg_sell " +
-    " from find_market_around(:system_name, :range) ",
+    " from get_daytrade_info(:system_name, :range) ",
     resultSetMapping = "MarketItemsStates"
 )
 

@@ -15,7 +15,7 @@ import lombok.Data;
 
 @Data
 @SqlResultSetMapping(
-    name = "find_order_volumes",
+    name = "find_fufilled_order_volumes",
     entities=@EntityResult(
         entityClass=MarketInformation.class,
         fields = {
@@ -30,12 +30,12 @@ import lombok.Data;
             }
     )
 )
-@NamedNativeQuery(name = "find_order_volumes",
+@NamedNativeQuery(name = "find_fufilled_order_volumes",
     query = "" +
     " select type_id, total_isk, total_isk_bought, " +
     " total_isk_sold , total_buy_order, " +
     " total_sell_order , avg_buy , avg_sell " +
-    " from find_order_volumes(:system_name, :range) ",
+    " from find_fufilled_order_volumes(:system_name, :range) ",
     resultSetMapping = "getRequiredMaterials"
 )
 public class MarketInformation {
