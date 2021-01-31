@@ -63,7 +63,6 @@ public class Moon {
         } else {
             isEquals = false;
         }
-        logger.info("isEquals: {}", isEquals);
         return isEquals;
     }
 

@@ -5,7 +5,6 @@ import java.util.Collections;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kaldie.eveindustry.client.zkillboard.KillboardWebSocketClient;
-import com.kaldie.eveindustry.repository.BulkInsertUpdateRepository;
 import com.kaldie.eveindustry.repository.ESDReader;
 import com.kaldie.eveindustry.service.task.TaskRunner;
 
@@ -17,10 +16,8 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.Ordered;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -36,10 +33,6 @@ public class EveIndustryApplication {
 
 	private final KillboardWebSocketClient killboardWebSocketClient;
 
-	// private final RegionRepository regionRepository;
-
-	// private final MarketOppurtunities opp;
-
 	private final TaskRunner runner;
 
 	private final ESDReader reader;
@@ -47,7 +40,7 @@ public class EveIndustryApplication {
 	@EventListener(ApplicationReadyEvent.class)
 	public void doSomethingAfterStartup() throws IOException {
 
-		// reader.storeEsd();
+		reader.storeEsd();
 		
 		runner.runAll();
 

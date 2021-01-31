@@ -22,7 +22,7 @@
 
   <b-table small striped hover bordered 
     id="my-table"
-    :items="orders" 
+    :items="visible_orders" 
     :fields="fields" 
     :per-page="perPage" 
     :current-page="currentPage"
@@ -61,7 +61,6 @@ export default {
   name: 'MarketOrders',
   data: () => { return {
     orders: [],
-    visible_orders: [],
     visible_column_keys: [],
     currentPage: 1,
     perPage: 20,
@@ -137,6 +136,9 @@ export default {
       return  this.columns_definitions.filter(default_field => 
         this.visible_column_keys.includes(default_field.key) 
       )
+    },
+    visible_orders() {
+      return this.orders
     }
   },
 }

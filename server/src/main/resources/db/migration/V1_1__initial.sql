@@ -500,6 +500,42 @@ CREATE TABLE stargate (
 	CONSTRAINT PK__stargate PRIMARY KEY (id)
 )
 
+CREATE TABLE catagory (
+	id BIGINT NOT NULL,
+	[name] BIGINT NOT NULL,
+	published BIT NOT NULL,
+	icon BIGINT NOT NULL,
+	CONSTRAINT PK__catagory PRIMARY KEY (id),
+	CONSTRAINT FK_catagory_translated_string FOREIGN KEY ([name]) REFERENCES translated_string(id),
+)
+
+CREATE TABLE market_group (
+	id BIGINT NOT NULL,
+	[name] BIGINT NOT NULL,
+	[description] BIGINT,
+	has_types BIT NOT NULL,
+	[icon_id] BIGINT,
+	[parent_group] BIGINT,
+	CONSTRAINT PK__market_group PRIMARY KEY (id),
+	CONSTRAINT FK_market_group_name_translated_string FOREIGN KEY ([name]) REFERENCES translated_string(id),
+	CONSTRAINT FK_market_group_description_translated_string FOREIGN KEY ([description]) REFERENCES translated_string(id),
+)
+
+CREATE TABLE [type_group] (
+	id BIGINT NOT NULL,
+	[name] BIGINT NOT NULL,
+	anchorable BIT NOT NULL,
+	anchored BIT NOT NULL,
+	category BIGINT,
+	fittable_non_singleton BIT NOT NULL,
+	icon BIGINT,
+	published BIT NOT NULL,
+	use_base_price BIT NOT NULL,
+	CONSTRAINT PK__type_group PRIMARY KEY (id),
+	CONSTRAINT FK_type_group_name_translated_string FOREIGN KEY ([name]) REFERENCES translated_string(id),
+	CONSTRAINT FK_type_group_category_category FOREIGN KEY ([category]) REFERENCES catagory(id),
+)
+
 -- character_items definition
 
 -- Drop table
