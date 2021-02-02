@@ -586,9 +586,7 @@ CREATE NONCLUSTERED INDEX fulfilled_market_order_system_id_IDX ON fulfilled_mark
 CREATE NONCLUSTERED INDEX market_order_system_id_IDX ON dbo.market_order (  system_id ASC  )  
 	 WITH (  PAD_INDEX = OFF ,FILLFACTOR = 100  ,SORT_IN_TEMPDB = OFF , IGNORE_DUP_KEY = OFF , STATISTICS_NORECOMPUTE = OFF , ONLINE = OFF , ALLOW_ROW_LOCKS = ON , ALLOW_PAGE_LOCKS = ON  )
 	 ON [PRIMARY ];
-
-
-
+GO
 
 CREATE OR ALTER TRIGGER market_order_fufillment_update on market_order
 AFTER UPDATE, DELETE
@@ -596,19 +594,19 @@ NOT FOR REPLICATION
 AS
 BEGIN
 
-INSERT fulfilled_market_order 
-	(is_buy, price, fulfilled_recorded, volume, type_id, system_id, [location])
-select 
-	deleted.is_buy, 
-	deleted.price,
-	GETDATE(),
-	deleted.volume_remain - coalesce(inserted.volume_remain, 0), 
-	deleted.type_id, 
-	deleted.system_id, 
-	deleted.[location]
-FROM deleted
-left join inserted on deleted.id = inserted.id
-WHERE deleted.duration != 365
+	INSERT fulfilled_market_order 
+		(is_buy, price, fulfilled_recorded, volume, type_id, system_id, [location])
+	select 
+		deleted.is_buy, 
+		deleted.price,
+		GETDATE(),
+		deleted.volume_remain - coalesce(inserted.volume_remain, 0), 
+		deleted.type_id, 
+		deleted.system_id, 
+		deleted.[location]
+	FROM deleted
+	left join inserted on deleted.id = inserted.id
+	WHERE deleted.duration != 365
 END
 GO
 
@@ -725,3 +723,56 @@ AS BEGIN
 	
 	return
 END
+GO
+
+CREATE OR ALTER FUNCTION get_market_group_lineage(@market_group_id BIGINT) 
+RETURNS @output TABLE(id BIGINT, name nvarchar(100), parent BIGINT, lineage nvarchar(100))
+BEGIN
+	with cte_market_group_children as (
+	SELECT
+		mg.id,
+		mg.name,
+		mg.parent_group
+	FROM market_group mg
+	WHERE mg.id = @market_group_id
+	UNION ALL 
+	select 
+		mg2.id,
+		mg2.name,
+		mg2.parent_group
+	from market_group AS mg2, cte_market_group_children AS mgc
+	where mg2.parent_group = mgc.id ),
+	cte_market_group_parents as (
+		SELECT mg.id,
+			mg.name,
+			mg.parent_group
+		FROM market_group mg 
+		WHERE mg.id = @market_group_id
+		UNION ALL 
+		select 
+			mg2.id,
+			mg2.name,
+			mg2.parent_group
+		from market_group AS mg2, cte_market_group_parents AS mgp
+		where mg2.id = mgp.parent_group 
+	)
+	insert into @output (id, name, parent, lineage) 
+	select id, en, parent_group, lineage from (
+	select cte.id, ts.en, parent_group, 'child' as lineage
+	from cte_market_group_children as cte
+	join translated_string ts on ts.id = cte.name
+	where cte.id != @market_group_id
+	UNION ALL 
+	select cte.id, ts.en, parent_group, 'parent' as lineage
+	from cte_market_group_parents as cte
+	join translated_string ts on ts.id = cte.name
+	where cte.id != @market_group_id
+	) as full_market_group_lineage
+	UNION ALL
+	SELECT mg.id, ts.en, parent_group, 'source' from market_group as mg
+	join translated_string ts on ts.id = mg.name 
+	where mg.id = @market_group_id
+
+	RETURN 
+END
+GO

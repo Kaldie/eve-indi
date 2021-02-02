@@ -7,8 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.SqlResultSetMapping;
 
-import org.hibernate.annotations.Subselect;
-
 import javax.persistence.EntityResult;
 
 import lombok.Data;
@@ -36,7 +34,7 @@ import lombok.Data;
     " total_isk_sold , total_buy_order, " +
     " total_sell_order , avg_buy , avg_sell " +
     " from find_fufilled_order_volumes(:system_name, :range) ",
-    resultSetMapping = "getRequiredMaterials"
+    resultSetMapping = "find_fufilled_order_volumes"
 )
 public class MarketInformation {
     @Id

@@ -176,7 +176,7 @@ public class ESDReader {
         groupRepository.updateInsertDeleteFromBulk(groups, Group.class);
         
         List<SimpleMarketGroup> simpleMarketGroupList = new ArrayList<>();
-        marketGroups.forEach(marketGroup -> simpleMarketGroupList.add(Adaptor.from(marketGroup)););
+        marketGroups.forEach(marketGroup -> simpleMarketGroupList.add(Adaptor.from(marketGroup)));
         simpleMarketGroupRepository.updateInsertDeleteFromBulk(
             simpleMarketGroupList, 
             SimpleMarketGroup.class);
